@@ -7,17 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.dev.cameronc.movies.Model.Movie
+import com.dev.cameronc.movies.Model.MovieResponseItem
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
 
-class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, private val results: MutableList<Movie>, private val movieAdapterListener: MovieAdapterListener) : RecyclerView.Adapter<MovieCardAdapter.MovieVH>()
+class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, private val results: MutableList<MovieResponseItem>,
+                       private val movieAdapterListener: MovieAdapterListener) : RecyclerView.Adapter<MovieCardAdapter.MovieVH>()
 {
 
-    override fun getItemCount(): Int
-    {
-        return results.size
-    }
+    override fun getItemCount(): Int = results.size
 
     override fun onBindViewHolder(holder: MovieVH, position: Int)
     {
@@ -33,12 +31,13 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView?)
     {
         super.onAttachedToRecyclerView(recyclerView)
-        recyclerView?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener()
+        {
             override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int)
             {
                 val gridLayoutManager = rv.layoutManager as LinearLayoutManager
                 val lastVisible = gridLayoutManager.findLastVisibleItemPosition()
-                if(results.size - 6 < lastVisible)
+                if (results.size - 6 < lastVisible)
                 {
                     movieAdapterListener.loadMore()
                 }
@@ -46,13 +45,14 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
         })
     }
 
-    public fun setMovies(movies: List<Movie>)
+    public fun setMovies(movies: List<MovieResponseItem>)
     {
         this.results.clear()
         this.results.addAll(movies)
+        notifyDataSetChanged()
     }
 
-    public fun addMovies(movies: List<Movie>)
+    public fun addMovies(movies: List<MovieResponseItem>)
     {
         notifyItemRangeInserted(results.size, movies.size)
         results.addAll(movies)
@@ -60,10 +60,10 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
 
     class MovieVH(view: View, val imageDownloader: MovieImageDownloader, val listener: MovieAdapterListener) : RecyclerView.ViewHolder(view)
     {
-        val moviePoster: ImageView = view.findViewById(R.id.movie_card_poster)
+        val moviePoster: ImageView= view.findViewById(R.id.movie_card_poster)
         val movieTitle: TextView = view.findViewById(R.id.movie_name)
 
-        fun bind(movie: Movie)
+        fun bind(movie: MovieResponseItem)
         {
             imageDownloader.load(movie.posterPath, moviePoster)?.centerCrop()?.placeholder(android.R.drawable.progress_horizontal)?.into(moviePoster)
             movieTitle.text = movie.title
@@ -74,6 +74,6 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
     interface MovieAdapterListener
     {
         fun loadMore()
-        fun onItemClicked(movie: Movie)
+        fun onItemClicked(movie: MovieResponseItem)
     }
 }

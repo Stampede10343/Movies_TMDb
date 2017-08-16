@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dev.cameronc.movies.MovieDetail.MovieDetailActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.dev.cameronc.movies.RatioImageView
+            android:id="@+id/movie_detail_poster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            app:ratio=".8"
+            app:srcCompat="@drawable/were_the_millers"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:layout_below="@id/movie_detail_poster"
+            android:background="@color/cardview_dark_background"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/movie_detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:padding="8dp"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                tools:text="The Shawshank Redemption (1997)"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/movie_detail_genre_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                tools:layout_editor_absoluteX="185dp"
+                tools:layout_editor_absoluteY="391dp"/>
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/cardview_dark_background"
+            android:layout_below="@id/linearLayout">
+
+            <TextView
+                android:id="@+id/movie_detail_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:padding="8dp"
+                android:textSize="16sp"
+                tools:text="This is a description about the Shawshank redemption"/>
+        </ScrollView>
+
+    </RelativeLayout>
+
+</RelativeLayout>

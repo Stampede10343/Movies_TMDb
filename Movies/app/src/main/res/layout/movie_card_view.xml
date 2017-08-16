@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="@drawable/black_gradient"
+            app:ratio="1.5"
             tools:src="@drawable/were_the_millers"/>
 
         <TextView

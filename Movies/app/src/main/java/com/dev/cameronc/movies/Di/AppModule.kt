@@ -1,40 +1,28 @@
 package com.dev.cameronc.movies.Di
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.dev.cameronc.movies.Model.MovieDbApi
+import com.dev.cameronc.movies.Model.MovieRepo
+import com.dev.cameronc.movies.Model.MovieRepositoy
+import com.dev.cameronc.movies.Model.Room.MovieDao
+import com.dev.cameronc.movies.Model.Room.MovieDatabase
 import com.dev.cameronc.movies.MoviesApp
-import com.dev.cameronc.movies.Start.StartActivityComponent
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
-@Module(includes = arrayOf(ViewModelModule::class),
-        subcomponents = arrayOf(StartActivityComponent::class)) class AppModule(val application: MoviesApp)
+@Module(includes = arrayOf(ViewModelModule::class)) class AppModule(
+        val application: MoviesApp)
 {
-    @Provides @Singleton fun provideMovieApi(apiKeyInterceptor: Interceptor): MovieDbApi
-    {
-        var httpClient = OkHttpClient()
-        httpClient = httpClient.newBuilder().addInterceptor(apiKeyInterceptor).build()
-        val api = Retrofit.Builder().baseUrl("https://api.themoviedb.org/3/").addConverterFactory(GsonConverterFactory.create()).client(
-                httpClient).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build()
 
-        return api.create(MovieDbApi::class.java)
-    }
+    @Provides @Singleton fun provideMovieRepository(repo: MovieRepo): MovieRepositoy = repo
 
-    @Provides fun provideApiKeyInterceptor(): Interceptor
+    @Provides @Singleton fun provideMovieDao(context: Context): MovieDao
     {
-        return Interceptor { chain ->
-            val request = chain.request()
-            val url = request.url().newBuilder().addQueryParameter("api_key", "***REMOVED***").build()
-            chain.proceed(request.newBuilder().url(url).build())
-        }
+        return Room.databaseBuilder(context, MovieDatabase::class.java, "movieDb").build().movieDao()
     }
 
     @Provides fun context(): Context
@@ -47,8 +35,13 @@ import javax.inject.Singleton
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    @Provides fun screenWidth(context: Context): Int
+    @Provides @Named(SCREEN_WIDTH) fun screenWidth(context: Context): Int
     {
         return context.resources.displayMetrics.widthPixels
+    }
+
+    companion object
+    {
+        const val SCREEN_WIDTH = "screenWidth"
     }
 }

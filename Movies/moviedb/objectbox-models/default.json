@@ -1,0 +1,82 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:9075533981263004108",
+      "lastPropertyId": "14:7144877217271066867",
+      "name": "MovieResponseItem",
+      "properties": [
+        {
+          "id": "1:4978376531163615987",
+          "name": "posterPath"
+        },
+        {
+          "id": "2:8099907860564449296",
+          "name": "adult"
+        },
+        {
+          "id": "3:1081735839976780207",
+          "name": "overview"
+        },
+        {
+          "id": "4:7366279557899890197",
+          "name": "releaseDate"
+        },
+        {
+          "id": "5:5451676328919579565",
+          "name": "uniqueId"
+        },
+        {
+          "id": "6:8482678355357402706",
+          "name": "originalTitle"
+        },
+        {
+          "id": "7:2680936705304370760",
+          "name": "originalLanguage"
+        },
+        {
+          "id": "8:6482632621880772903",
+          "name": "title"
+        },
+        {
+          "id": "9:1200383421375547492",
+          "name": "backdropPath"
+        },
+        {
+          "id": "10:6799267001278702671",
+          "name": "popularity"
+        },
+        {
+          "id": "11:1353700028569646070",
+          "name": "voteCount"
+        },
+        {
+          "id": "12:8659402626181440060",
+          "name": "video"
+        },
+        {
+          "id": "13:2419347610467323681",
+          "name": "voteAverage"
+        },
+        {
+          "id": "14:7144877217271066867",
+          "name": "id"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:9075533981263004108",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

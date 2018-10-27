@@ -1,36 +1,26 @@
 package com.dev.cameronc.movies
 
-import android.util.Log
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
-import com.bumptech.glide.DrawableTypeRequest
 import com.bumptech.glide.Glide
-import com.dev.cameronc.movies.Di.AppModule
-import com.dev.cameronc.movies.Model.ConfigurationResponse
+import com.bumptech.glide.RequestBuilder
+import com.dev.cameronc.movies.di.AppModule
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Singleton class MovieImageDownloader @Inject constructor(@Named(AppModule.SCREEN_WIDTH) val screenWidth: Int)
-{
-    var baseUrl: String? = null
-    var posterWidth: String? = null
+@Singleton
+class MovieImageDownloader @Inject constructor(@Named(AppModule.SCREEN_WIDTH) val screenWidth: Int) {
+    private var baseUrl: String = "https://image.tmdb.org/t/p/"
+    private var posterWidth: String = "w500"
 
-    fun init(response: ConfigurationResponse)
-    {
-        baseUrl = response.images.baseUrl
-        posterWidth = response.images.posterSizes.find { it.removePrefix("w").toInt() >= screenWidth / 4 }
-    }
+    fun load(posterPath: String?, view: ImageView): RequestBuilder<Drawable> {
+        return if (posterPath != null) {
 
-    fun load(posterPath: String?, view: ImageView): DrawableTypeRequest<String>?
-    {
-        if (baseUrl != null && posterPath != null)
-        {
-            return Glide.with(view.context).load(baseUrl + posterWidth + '/' + posterPath)
-        }
-        else
-        {
-            Log.i(javaClass.name, "Image Loader not initialized")
-            return null
+            val url = "$baseUrl$posterWidth/$posterPath"
+            Glide.with(view).load(url)
+        } else {
+            Glide.with(view).load("")
         }
     }
 }

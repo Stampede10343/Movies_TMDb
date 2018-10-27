@@ -1,69 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dev.cameronc.movies.MovieDetail.MovieDetailActivity">
+    android:background="@color/cardview_dark_background"
+    tools:context="com.dev.cameronc.movies.moviedetail.MovieDetailActivity">
 
     <RelativeLayout
+        android:id="@+id/movie_detail_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <com.dev.cameronc.movies.RatioImageView
+        <com.dev.cameronc.androidutilities.view.RatioImageView
             android:id="@+id/movie_detail_poster"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
-            app:ratio=".8"
-            app:srcCompat="@drawable/were_the_millers"/>
+            app:ratio="1"
+            app:srcCompat="@drawable/were_the_millers" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/movie_detail_poster"
-            android:background="@color/cardview_dark_background"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/movie_detail_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:padding="8dp"
-                android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-                tools:text="The Shawshank Redemption (1997)"/>
+                android:textSize="24sp"
+                tools:text="The Shawshank Redemption (1997)" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/movie_detail_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:text="R"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/movie_detail_runtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/movie_duration"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                    android:visibility="invisible"
+                    tools:text="139 minutes"
+                    tools:visibility="visible" />
+            </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/movie_detail_genre_list"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                tools:layout_editor_absoluteX="185dp"
-                tools:layout_editor_absoluteY="391dp"/>
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                tools:itemCount="4"
+                tools:layoutManager="GridLayoutManager"
+                tools:listitem="@layout/genre_tag_layout"
+                tools:spanCount="5"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/cardview_dark_background"
-            android:layout_below="@id/linearLayout">
+            android:layout_below="@id/linearLayout"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp">
 
-            <TextView
-                android:id="@+id/movie_detail_description"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-                android:padding="8dp"
-                android:textSize="16sp"
-                tools:text="This is a description about the Shawshank redemption"/>
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/movie_detail_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                    android:textSize="16sp"
+                    tools:text="This is a description about the Shawshank redemption" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cast"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/movie_detail_actors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    tools:layoutManager="GridLayoutManager"
+                    tools:listitem="@layout/actor_grid_item" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/related"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/movie_detail_related_movies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    tools:layoutManager="GridLayoutManager"
+                    tools:listitem="@layout/related_movie_item" />
+            </LinearLayout>
         </ScrollView>
-
     </RelativeLayout>
-
-</RelativeLayout>
+</ScrollView>

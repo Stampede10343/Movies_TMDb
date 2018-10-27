@@ -1,0 +1,80 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:299880913283331683",
+      "lastPropertyId": "14:478143511031067555",
+      "name": "MovieResponseItem",
+      "properties": [
+        {
+          "id": "1:5346799967035666093",
+          "name": "posterPath"
+        },
+        {
+          "id": "2:6203841998319665544",
+          "name": "adult"
+        },
+        {
+          "id": "3:6183484087101125049",
+          "name": "overview"
+        },
+        {
+          "id": "4:7482263160431409671",
+          "name": "releaseDate"
+        },
+        {
+          "id": "6:4113755748708925429",
+          "name": "originalTitle"
+        },
+        {
+          "id": "7:8899032001171075976",
+          "name": "originalLanguage"
+        },
+        {
+          "id": "8:8750483061196785102",
+          "name": "title"
+        },
+        {
+          "id": "9:2467796177949935350",
+          "name": "backdropPath"
+        },
+        {
+          "id": "10:581175923612115704",
+          "name": "popularity"
+        },
+        {
+          "id": "11:1778396172390917350",
+          "name": "voteCount"
+        },
+        {
+          "id": "12:6943077801677991035",
+          "name": "video"
+        },
+        {
+          "id": "13:7504230365218635883",
+          "name": "voteAverage"
+        },
+        {
+          "id": "14:478143511031067555",
+          "name": "uniqueId"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:299880913283331683",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    8499717843660350756
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

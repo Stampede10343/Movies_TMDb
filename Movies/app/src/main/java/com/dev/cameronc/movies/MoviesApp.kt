@@ -1,24 +1,29 @@
 package com.dev.cameronc.movies
 
 import android.app.Application
-import com.dev.cameronc.movies.Di.AppComponent
-import com.dev.cameronc.movies.Di.AppModule
-import com.dev.cameronc.movies.Di.DaggerAppComponent
+import com.dev.cameronc.movies.di.AppComponent
+import com.dev.cameronc.movies.di.AppModule
+import com.dev.cameronc.movies.di.DaggerAppComponent
+import net.danlew.android.joda.JodaTimeAndroid
+import timber.log.Timber
 
 
-class MoviesApp : Application()
-{
+class MoviesApp : Application() {
     private lateinit var appComponent: AppComponent
 
-    override fun onCreate()
-    {
+    override fun onCreate() {
         super.onCreate()
+
+        Timber.plant(Timber.DebugTree())
+        JodaTimeAndroid.init(this)
+        app = this
         appComponent = DaggerAppComponent.builder().app(this).appModule(AppModule(this)).build()
     }
 
-    fun getAppComponent(): AppComponent
-    {
-        return appComponent
+    fun getAppComponent(): AppComponent = appComponent
+
+    companion object {
+        lateinit var app: MoviesApp
     }
 
 }

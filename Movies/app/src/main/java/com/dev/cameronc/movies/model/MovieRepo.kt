@@ -8,6 +8,7 @@ import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -17,12 +18,9 @@ import javax.inject.Singleton
 
 @Singleton
 class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
-                                    private val boxStore: BoxStore,
+                                    boxStore: BoxStore,
                                     private val movieMapper: MovieMapper) : MovieRepository {
     private val movieItemBox: Box<UpcomingMovie> = boxStore.boxFor(UpcomingMovie::class.java)
-    private var genres: MutableMap<Int, String>? = null
-    private var upcomingMovies: MutableList<MovieResponseItem> = emptyList<MovieResponseItem>().toMutableList()
-    //    private val moviesSubject: BehaviorSubject<List<MovieResponseItem>> = BehaviorSubject.create()
     private val getMoviesSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val moviesSubject: BehaviorSubject<List<UpcomingMovie>> = BehaviorSubject.create()
     private var moviesSubscription: Disposable
@@ -33,7 +31,11 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                 .flatMap { page ->
                     val remoteMovies = getMoviesFromApi(page)
                     val localMovies = getMoviesFromBox(page)
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .observeOn(AndroidSchedulers.mainThread())
                     Observable.concat<List<UpcomingMovie>>(localMovies, remoteMovies)
+                            .firstElement()
+                            .toObservable()
                 }
                 .subscribeOn(Schedulers.io())
                 .map {
@@ -61,23 +63,6 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                     .map { movies ->
                         movies.map { movieResponseItem -> movieMapper.mapMovieResponseToUpcomingMovie(movieResponseItem) }
                     }
-
-    private fun addGenres(results: List<MovieResponseItem>, genres: Map<Int, String>) {
-        //results.forEach { mov -> mov.genreIds.forEach { mov.addGenre(genres[it]!!) } }
-    }
-
-    private fun genreMapper(): Observable<Map<Int, String>> {
-        if (genres == null) {
-            genres = HashMap()
-            return movieDbApi.getGenres().map { it.genres.forEach { addGenreIntoMap(it) } }.map { genres }
-        } else {
-            return Observable.just(genres)
-        }
-    }
-
-    private fun addGenreIntoMap(genre: Genre) {
-        genres?.put(genre.id, genre.name)
-    }
 
     override fun saveMovies(movies: List<MovieResponseItem>) {
         val allMovies = movieItemBox.all

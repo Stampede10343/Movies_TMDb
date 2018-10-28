@@ -4,8 +4,7 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 
 @Entity
-data class ActorDetails(@Id var id: Long,
-                        val tmdbId: Long,
+data class ActorDetails(@Id(assignable = true) var tmdbId: Long,
                         val biography: String,
                         val birthday: String?,
                         val deathDay: String?,

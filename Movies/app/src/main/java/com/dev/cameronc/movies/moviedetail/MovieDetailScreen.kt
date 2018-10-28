@@ -130,7 +130,7 @@ class MovieDetailScreen : BaseScreen {
 
     @Parcelize
     data class MovieDetailKey(val tmdbId: Long) : StateKey, Parcelable {
-        override fun layout(): Int = R.layout.activity_movie_detail
+        override fun layout(): Int = R.layout.movie_detail_screen
         override fun viewChangeHandler(): ViewChangeHandler = SegueViewChangeHandler()
     }
 }

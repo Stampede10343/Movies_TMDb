@@ -98,7 +98,7 @@ class ActorScreen : BaseScreen {
 
     @Parcelize
     data class ActorScreenKey(val actorId: Long) : StateKey, Parcelable {
-        override fun layout(): Int = R.layout.activity_actor
+        override fun layout(): Int = R.layout.actor_screen
         override fun viewChangeHandler(): ViewChangeHandler = SegueViewChangeHandler()
     }
 }

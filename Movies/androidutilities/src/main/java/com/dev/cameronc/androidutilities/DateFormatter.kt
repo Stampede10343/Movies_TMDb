@@ -17,6 +17,9 @@ class DateFormatter @Inject constructor() {
         return "Age ${Years.yearsBetween(localDate, DateTime.now()).years}"
     }
 
+    fun getTimeSpanAtTime(beginDate: String?, endDate: String?): String =
+            "Age ${Years.yearsBetween(DateTime.parse(beginDate), DateTime.parse(endDate)).years}"
+
     object DateFormats {
         const val dateFormat: String = "MMMM d, yyyy"
     }

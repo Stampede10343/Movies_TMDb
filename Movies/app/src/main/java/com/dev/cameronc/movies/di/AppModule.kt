@@ -3,10 +3,10 @@ package com.dev.cameronc.movies.di
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.dev.cameronc.moviedb.data.MyObjectBox
+import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.model.MovieRepo
 import com.dev.cameronc.movies.model.MovieRepository
-import com.dev.cameronc.movies.MoviesApp
+import com.dev.cameronc.movies.model.MyObjectBox
 import dagger.Module
 import dagger.Provides
 import io.objectbox.BoxStore

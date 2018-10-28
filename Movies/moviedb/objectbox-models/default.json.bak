@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:9075533981263004108",
-      "lastPropertyId": "13:2419347610467323681",
+      "lastPropertyId": "14:7144877217271066867",
       "name": "MovieResponseItem",
       "properties": [
         {
@@ -59,6 +59,10 @@
         {
           "id": "13:2419347610467323681",
           "name": "voteAverage"
+        },
+        {
+          "id": "14:7144877217271066867",
+          "name": "id"
         }
       ],
       "relations": []

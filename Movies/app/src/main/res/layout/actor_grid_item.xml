@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="120dp"
+    android:layout_height="wrap_content"
+
+    android:elevation="2dp"
+    android:paddingEnd="1dp"
+    android:paddingStart="1dp"
+    android:paddingTop="1dp">
+
+    <com.dev.cameronc.androidutilities.view.RatioImageView
+        android:id="@+id/actor_item_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="0.66"
+        tools:src="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/actor_item_name"
+        style="?attr/actorItemTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="2"
+        android:padding="4dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/actor_item_image"
+        tools:text="Harrison Ford" />
+
+</android.support.constraint.ConstraintLayout>

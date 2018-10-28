@@ -4,76 +4,79 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:299880913283331683",
-      "lastPropertyId": "14:478143511031067555",
-      "name": "MovieResponseItem",
+      "id": "2:8083586711620741504",
+      "lastPropertyId": "10:6669358483822243605",
+      "name": "ActorDetails",
       "properties": [
         {
-          "id": "1:5346799967035666093",
-          "name": "posterPath"
+          "id": "1:7514126570866258557",
+          "name": "id"
         },
         {
-          "id": "2:6203841998319665544",
-          "name": "adult"
+          "id": "2:7827045450645745638",
+          "name": "tmdbId"
         },
         {
-          "id": "3:6183484087101125049",
-          "name": "overview"
+          "id": "3:1930957355864891864",
+          "name": "biography"
         },
         {
-          "id": "4:7482263160431409671",
-          "name": "releaseDate"
+          "id": "4:3163453487183353018",
+          "name": "birthday"
         },
         {
-          "id": "6:4113755748708925429",
-          "name": "originalTitle"
+          "id": "5:526736681567202853",
+          "name": "deathDay"
         },
         {
-          "id": "7:8899032001171075976",
-          "name": "originalLanguage"
+          "id": "6:7463064755888306190",
+          "name": "homepage"
         },
         {
-          "id": "8:8750483061196785102",
-          "name": "title"
+          "id": "7:1326258915376771705",
+          "name": "knownFor"
         },
         {
-          "id": "9:2467796177949935350",
-          "name": "backdropPath"
+          "id": "8:8781871617284107574",
+          "name": "name"
         },
         {
-          "id": "10:581175923612115704",
-          "name": "popularity"
+          "id": "9:3969015872036045020",
+          "name": "placeOfBirth"
         },
         {
-          "id": "11:1778396172390917350",
-          "name": "voteCount"
-        },
-        {
-          "id": "12:6943077801677991035",
-          "name": "video"
-        },
-        {
-          "id": "13:7504230365218635883",
-          "name": "voteAverage"
-        },
-        {
-          "id": "14:478143511031067555",
-          "name": "uniqueId"
+          "id": "10:6669358483822243605",
+          "name": "profilePhotoPath"
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "1:299880913283331683",
+  "lastEntityId": "2:8083586711620741504",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,
   "modelVersionParserMinimum": 4,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    299880913283331683
+  ],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    8499717843660350756
+    8499717843660350756,
+    5346799967035666093,
+    6203841998319665544,
+    6183484087101125049,
+    7482263160431409671,
+    4113755748708925429,
+    8899032001171075976,
+    8750483061196785102,
+    2467796177949935350,
+    581175923612115704,
+    1778396172390917350,
+    6943077801677991035,
+    7504230365218635883,
+    478143511031067555
   ],
   "retiredRelationUids": [],
   "version": 1

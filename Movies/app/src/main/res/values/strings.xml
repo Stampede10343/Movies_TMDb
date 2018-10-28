@@ -3,4 +3,8 @@
     <string name="movie_duration">%1$s minutes</string>
     <string name="cast">Cast</string>
     <string name="related">Related</string>
+    <string name="actor_profile_photo">Actor profile photo</string>
+    <string name="actor_born">Born %1$s</string>
+    <string name="movie_credits">Movie Credits</string>
+    <string name="actor_died">Died %1$s</string>
 </resources>

@@ -8,21 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.request.RequestOptions.centerCropTransform
-import com.dev.cameronc.moviedb.data.MovieResponseItem
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
+import com.dev.cameronc.movies.model.movie.UpcomingMovie
 
-class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, private val results: MutableList<MovieResponseItem>,
+class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, private val results: MutableList<UpcomingMovie>,
                        private val movieAdapterListener: MovieAdapterListener) : RecyclerView.Adapter<MovieCardAdapter.MovieVH>() {
+
+    private var isLoadingMore = false
 
     init {
         setHasStableIds(true)
-    }
-
-    override fun getItemCount(): Int = results.size
-
-    override fun onBindViewHolder(holder: MovieVH, position: Int) {
-        holder.bind(results[position])
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieVH {
@@ -31,51 +27,56 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
         return MovieVH(view, imageDownloader, movieAdapterListener)
     }
 
+    override fun onBindViewHolder(holder: MovieVH, position: Int) {
+        holder.bind(results[position])
+    }
+
+    override fun getItemCount(): Int = results.size
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
                 val gridLayoutManager = rv.layoutManager as LinearLayoutManager
                 val lastVisible = gridLayoutManager.findLastVisibleItemPosition()
-                if (results.size - 6 < lastVisible) {
+                if (results.size - 6 < lastVisible && !isLoadingMore) {
+                    isLoadingMore = true
                     movieAdapterListener.loadMore()
                 }
             }
         })
     }
 
-    override fun getItemId(position: Int): Long = results[position].id
+    override fun getItemId(position: Int): Long = results[position].tmdbId
 
-    fun setMovies(movies: List<MovieResponseItem>) {
-        this.results.clear()
-        this.results.addAll(movies)
-        notifyDataSetChanged()
-    }
-
-    fun addMovies(movies: List<MovieResponseItem>) {
+    fun addMovies(movies: List<UpcomingMovie>) {
         val update = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = results[oldItemPosition].uniqueId == movies[newItemPosition].uniqueId
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = results[oldItemPosition].tmdbId == movies[newItemPosition].tmdbId
             override fun getOldListSize(): Int = results.size
             override fun getNewListSize(): Int = movies.size
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = results[oldItemPosition] == movies[newItemPosition]
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = results[oldItemPosition].posterPath == movies[newItemPosition].posterPath
         })
+        results.clear()
         results.addAll(movies)
         update.dispatchUpdatesTo(this)
+
+        isLoadingMore = false
     }
 
     class MovieVH(view: View, private val imageDownloader: MovieImageDownloader, private val listener: MovieAdapterListener) : RecyclerView.ViewHolder(view) {
         private val moviePoster: ImageView = view.findViewById(R.id.movie_card_poster)
 
-        fun bind(movie: MovieResponseItem) {
+        fun bind(movie: UpcomingMovie) {
             imageDownloader.load(movie.posterPath, moviePoster)
                     .apply(centerCropTransform().placeholder(android.R.drawable.progress_horizontal))
                     .into(moviePoster)
-            itemView.setOnClickListener { listener.onItemClicked(movie) }
+            itemView.setOnClickListener { listener.onItemClicked(movie.tmdbId) }
         }
+
     }
 
     interface MovieAdapterListener {
         fun loadMore()
-        fun onItemClicked(movie: MovieResponseItem)
+        fun onItemClicked(tmdbId: Long)
     }
 }

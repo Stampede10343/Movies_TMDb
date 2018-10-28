@@ -11,7 +11,7 @@ data class SearchResponse(
 
 data class Result(
         @SerializedName("vote_count") val voteCount: Int,
-        @SerializedName("id") val id: Int,
+        @SerializedName("id") val id: Long,
         @SerializedName("video") val video: Boolean,
         @SerializedName("vote_average") val voteAverage: Float,
         @SerializedName("title") val title: String,

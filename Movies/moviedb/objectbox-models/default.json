@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:9075533981263004108",
-      "lastPropertyId": "14:7144877217271066867",
+      "lastPropertyId": "15:4192306444737036434",
       "name": "MovieResponseItem",
       "properties": [
         {
@@ -61,8 +61,8 @@
           "name": "voteAverage"
         },
         {
-          "id": "14:7144877217271066867",
-          "name": "id"
+          "id": "15:4192306444737036434",
+          "name": "tmdbId"
         }
       ],
       "relations": []
@@ -76,7 +76,9 @@
   "modelVersionParserMinimum": 4,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    7144877217271066867
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

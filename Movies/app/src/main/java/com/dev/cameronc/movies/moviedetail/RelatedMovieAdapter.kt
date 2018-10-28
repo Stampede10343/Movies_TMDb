@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 class RelatedMovieAdapter @Inject constructor(private val movieImageDownloader: MovieImageDownloader) : RecyclerView.Adapter<RelatedMovieViewHolder>() {
     lateinit var relatedMovies: List<Result>
+    lateinit var relatedMovieClickListener: (movieId: Long) -> Unit
 
     init {
         setHasStableIds(true)
@@ -23,6 +24,7 @@ class RelatedMovieAdapter @Inject constructor(private val movieImageDownloader: 
 
     override fun onBindViewHolder(holder: RelatedMovieViewHolder, position: Int) {
         val item = relatedMovies[position]
+        holder.itemView.setOnClickListener { relatedMovieClickListener.invoke(item.id) }
         movieImageDownloader.load(item.posterPath, holder.image)
                 .apply(RequestOptions.centerCropTransform())
                 .apply(RequestOptions().placeholder(R.drawable.black_gradient))

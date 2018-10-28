@@ -5,6 +5,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.dev.cameronc.movies.di.AppModule
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -18,6 +19,7 @@ class MovieImageDownloader @Inject constructor(@Named(AppModule.SCREEN_WIDTH) va
         return if (posterPath != null) {
 
             val url = "$baseUrl$posterWidth/$posterPath"
+            Timber.v(url)
             Glide.with(view).load(url)
         } else {
             Glide.with(view).load("")

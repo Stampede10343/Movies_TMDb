@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,17 +9,11 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless">
 
-    <FrameLayout
+    <com.dev.cameronc.androidutilities.view.RatioImageView
+        android:id="@+id/movie_card_poster"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.dev.cameronc.androidutilities.view.RatioImageView
-            android:id="@+id/movie_card_poster"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foreground="@drawable/black_gradient"
-            app:ratio="1.5"
-            tools:src="@drawable/were_the_millers" />
-    </FrameLayout>
-</android.support.v7.widget.CardView>
+        android:layout_height="wrap_content"
+        android:foreground="@drawable/black_gradient"
+        app:ratio="1.5"
+        tools:src="@drawable/were_the_millers" />
+</FrameLayout>

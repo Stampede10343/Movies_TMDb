@@ -2,66 +2,65 @@ package com.dev.cameronc.movies.model
 
 import com.dev.cameronc.moviedb.api.MovieDbApi
 import com.dev.cameronc.moviedb.data.*
+import com.dev.cameronc.movies.model.movie.MovieMapper
+import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi, private val boxStore: BoxStore) : MovieRepository {
-    private val movieItemBox: Box<MovieResponseItem> = boxStore.boxFor(MovieResponseItem::class.java)
+class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
+                                    private val boxStore: BoxStore,
+                                    private val movieMapper: MovieMapper) : MovieRepository {
+    private val movieItemBox: Box<UpcomingMovie> = boxStore.boxFor(UpcomingMovie::class.java)
     private var genres: MutableMap<Int, String>? = null
     private var upcomingMovies: MutableList<MovieResponseItem> = emptyList<MovieResponseItem>().toMutableList()
-    private val moviesSubject: BehaviorSubject<List<MovieResponseItem>> = BehaviorSubject.create()
-    private val getMoviesSubject: PublishSubject<String> = PublishSubject.create()
-    private var moviesSubscription: Disposable? = null
+    //    private val moviesSubject: BehaviorSubject<List<MovieResponseItem>> = BehaviorSubject.create()
+    private val getMoviesSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val moviesSubject: BehaviorSubject<List<UpcomingMovie>> = BehaviorSubject.create()
+    private var moviesSubscription: Disposable
 
-    override fun getUpcomingMovies(page: String): Observable<List<MovieResponseItem>> {
-        if (moviesSubscription == null) {
-            moviesSubscription = getMoviesSubject.flatMap { getMoviesFromApi(it) }
-                    .distinctUntilChanged()
-                    .map {
-                        val savedMoves = movieItemBox.all
-                        val newMovies = emptyList<MovieResponseItem>().toMutableList()
-                        for (newMovie in it) {
-                            if (!savedMoves.contains(newMovie)) newMovies.add(newMovie)
-                        }
-                        movieItemBox.put(newMovies)
-                        val allMovies = savedMoves.toMutableList()
-                        allMovies.addAll(newMovies)
-                        allMovies
-                    }
-                    .startWith(getMoviesFromBox("1"))
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ movies ->
-                        moviesSubject.onNext(movies)
-                    }, { err -> Timber.e(err) })
-        }
+    init {
+        moviesSubscription = getMoviesSubject
+                .distinct()
+                .flatMap { page ->
+                    val remoteMovies = getMoviesFromApi(page)
+                    val localMovies = getMoviesFromBox(page)
+                    Observable.concat<List<UpcomingMovie>>(localMovies, remoteMovies)
+                }
+                .subscribeOn(Schedulers.io())
+                .map {
+                    val allMoviesCached = moviesSubject.value?.toMutableSet()
+                            ?: emptySet<UpcomingMovie>().toMutableSet()
+                    allMoviesCached.addAll(it)
+                    allMoviesCached.toList()
+                }
+                .doOnNext { movieItemBox.put(it) }
+                .subscribe({ movies ->
+                    moviesSubject.onNext(movies)
+                }, { error -> Timber.e(error) })
+    }
+
+    override fun getUpcomingMovies(page: String): Observable<List<UpcomingMovie>> {
         getMoviesSubject.onNext(page)
         return moviesSubject
     }
 
-    private fun getMoviesFromBox(
-            page: String): Observable<MutableList<MovieResponseItem>> = Observable.just(movieItemBox.all)
+    private fun getMoviesFromBox(page: String): Observable<MutableList<UpcomingMovie>> =
+            Observable.just(movieItemBox.all)
 
-    private fun getMoviesFromApi(page: String): Observable<List<MovieResponseItem>> {
-        val upcomingMovies: Observable<UpcomingMovieResponse> = movieDbApi.getUpcomingMovies(page).subscribeOn(Schedulers.io())
-
-        return Observable.zip<UpcomingMovieResponse, Map<Int, String>, List<MovieResponseItem>>(upcomingMovies, genreMapper(), BiFunction { response, genres ->
-            addGenres(response.results, genres)
-            response.results
-        }).subscribeOn(Schedulers.computation())
-    }
+    private fun getMoviesFromApi(page: String): Observable<List<UpcomingMovie>> =
+            movieDbApi.getUpcomingMovies(page).map { it.results }
+                    .map { movies ->
+                        movies.map { movieResponseItem -> movieMapper.mapMovieResponseToUpcomingMovie(movieResponseItem) }
+                    }
 
     private fun addGenres(results: List<MovieResponseItem>, genres: Map<Int, String>) {
         //results.forEach { mov -> mov.genreIds.forEach { mov.addGenre(genres[it]!!) } }
@@ -82,7 +81,11 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi, private 
 
     override fun saveMovies(movies: List<MovieResponseItem>) {
         val allMovies = movieItemBox.all
-        val newMovies = movies.toMutableList()
+        val newMovies = movies.asSequence()
+                .toMutableList()
+                .asSequence()
+                .map { movieMapper.mapMovieResponseToUpcomingMovie(it) }
+                .toMutableList()
         for (movie in allMovies) {
             newMovies.remove(movie)
         }

@@ -55,11 +55,14 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
         return moviesSubject
     }
 
-    private fun getMoviesFromBox(page: String): Observable<MutableList<UpcomingMovie>> =
-            Observable.just(movieItemBox.all)
+    private fun getMoviesFromBox(page: String): Observable<MutableList<UpcomingMovie>> {
+        val allMovies = movieItemBox.all
+        return if (allMovies.isNotEmpty()) Observable.just(allMovies) else Observable.empty()
+    }
 
     private fun getMoviesFromApi(page: String): Observable<List<UpcomingMovie>> =
-            movieDbApi.getUpcomingMovies(page).map { it.results }
+            movieDbApi.getUpcomingMovies(page)
+                    .subscribeOn(Schedulers.io()).map { it.results }
                     .map { movies ->
                         movies.map { movieResponseItem -> movieMapper.mapMovieResponseToUpcomingMovie(movieResponseItem) }
                     }

@@ -19,6 +19,7 @@ import com.zhuinden.simplestack.navigator.StateKey
 import com.zhuinden.simplestack.navigator.ViewChangeHandler
 import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
 import com.zhuinden.statebundle.StateBundle
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
 
@@ -49,6 +50,7 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
         moviesList.adapter = moviesAdapter
 
         viewModel.getUpcomingMovies()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { movies ->
                             moviesAdapter.addMovies(movies)

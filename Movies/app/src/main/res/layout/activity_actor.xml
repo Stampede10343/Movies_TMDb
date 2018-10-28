@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.dev.cameronc.movies.actor.ActorScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/actor_profile_image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/actor_profile_photo"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="@string/profile_photo_ratio"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars[0]" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <TextView
+                android:id="@+id/actor_profile_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:minLines="2"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/actor_profile_image"
+                tools:text="Hello my name is albert" />
+
+            <TextView
+                android:id="@+id/actor_profile_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/actor_profile_image"
+                app:layout_constraintTop_toTopOf="@+id/actor_profile_image"
+                tools:text="Phillip Seymour Hoffman" />
+
+            <TextView
+                android:id="@+id/actor_profile_birthdate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                app:layout_constraintBottom_toTopOf="@+id/actor_profile_deathday"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/actor_profile_image"
+                app:layout_constraintTop_toBottomOf="@+id/actor_profile_place_of_birth"
+                tools:text="Born: April 10, 1993" />
+
+            <TextView
+                android:id="@+id/actor_profile_deathday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/actor_profile_image"
+                app:layout_constraintTop_toBottomOf="@+id/actor_profile_birthdate"
+                tools:text="Died: August 19, 2080"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/actor_profile_place_of_birth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                app:layout_constraintBottom_toTopOf="@+id/actor_profile_birthdate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/actor_profile_image"
+                app:layout_constraintTop_toBottomOf="@+id/actor_profile_name"
+                tools:text="Cleveland, Ohio" />
+
+            <TextView
+                android:id="@+id/actor_profile_age"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@+id/actor_profile_deathday"
+                tools:text="Age 87" />
+
+            <TextView
+                android:id="@+id/actor_credits_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/movie_credits"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/actor_profile_description" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/actor_movie_credits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/actor_credits_text"
+                app:layout_constraintVertical_bias="0.0"
+                tools:layoutManager="GridLayoutManager"
+                tools:listitem="@layout/related_movie_item"
+                tools:orientation="horizontal" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</com.dev.cameronc.movies.actor.ActorScreen>

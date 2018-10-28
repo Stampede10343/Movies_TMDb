@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.dev.cameronc.movies.start.StartScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000"
-    android:orientation="vertical"
-    tools:context="com.dev.cameronc.movies.start.StartActivity">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        style="@style/Widget.AppCompat.Toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.SearchView
-            android:id="@+id/movie_search_view"
+        <android.support.v7.widget.Toolbar
+            style="@style/Widget.AppCompat.Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </android.support.v7.widget.Toolbar>
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/start_movies"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+            <android.support.v7.widget.SearchView
+                android:id="@+id/movie_search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.Toolbar>
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/start_movies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layoutManager="GridLayoutManager"
+            tools:listitem="@layout/movie_card_view" />
+    </LinearLayout>
+</com.dev.cameronc.movies.start.StartScreen>

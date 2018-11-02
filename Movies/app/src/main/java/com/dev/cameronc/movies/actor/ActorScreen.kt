@@ -14,23 +14,25 @@ import com.dev.cameronc.androidutilities.DateFormatter
 import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.androidutilities.view.MarginItemDecoration
 import com.dev.cameronc.movies.MovieImageDownloader
+import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
-import com.dev.cameronc.movies.appComponent
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
 import com.dev.cameronc.movies.toDp
 import com.zhuinden.simplestack.Backstack
+import com.zhuinden.simplestack.Bundleable
 import com.zhuinden.simplestack.navigator.Navigator
 import com.zhuinden.simplestack.navigator.StateKey
 import com.zhuinden.simplestack.navigator.ViewChangeHandler
 import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
+import com.zhuinden.statebundle.StateBundle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.activity_actor.view.*
+import kotlinx.android.synthetic.main.actor_screen.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class ActorScreen : BaseScreen {
+class ActorScreen : BaseScreen, Bundleable {
 
     @Inject
     lateinit var imageDownloader: MovieImageDownloader
@@ -41,11 +43,13 @@ class ActorScreen : BaseScreen {
     @Inject
     lateinit var actorViewModel: ActorViewModel
 
+    private var previousScrollPosition: Int = 0
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
     init {
-        if (!isInEditMode) context.appComponent().inject(this)
+        if (!isInEditMode) MoviesApp.activityComponent.inject(this)
     }
 
     override fun viewReady() {
@@ -65,7 +69,7 @@ class ActorScreen : BaseScreen {
                     if (actorDetails.birthday.isNullOrBlank()) {
                         actor_profile_birthdate.visibility = View.GONE
                     } else {
-                        actor_profile_birthdate.text = context.getString(R.string.actor_born, dateFormatter.formatDateToLongFormat(actorDetails.birthday!!))
+                        actor_profile_birthdate.text = context.getString(R.string.actor_born, dateFormatter.formatDateToLongFormat(actorDetails.birthday))
                         if (actorDetails.deathDay == null) {
                             actor_profile_age.text = dateFormatter.getTimeSpanFromNow(actorDetails.birthday)
                         } else actor_profile_age.text = dateFormatter.getTimeSpanAtTime(actorDetails.birthday, actorDetails.deathDay)
@@ -74,7 +78,7 @@ class ActorScreen : BaseScreen {
                         actor_profile_deathday.visibility = View.GONE
                     } else {
                         actor_profile_deathday.visibility = View.VISIBLE
-                        actor_profile_deathday.text = context.getString(R.string.actor_died, dateFormatter.formatDateToLongFormat(actorDetails.deathDay!!))
+                        actor_profile_deathday.text = context.getString(R.string.actor_died, dateFormatter.formatDateToLongFormat(actorDetails.deathDay))
                     }
 
                     actor_profile_place_of_birth.text = actorDetails.placeOfBirth
@@ -93,7 +97,15 @@ class ActorScreen : BaseScreen {
                     actor_movie_credits.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
                     actorRoleAdapter.items = movieCredits.roles
                     actor_movie_credits.adapter = actorRoleAdapter
+
+                    postDelayed({ if (viewState != null) restoreHierarchyState(viewState) }, 100)
                 }, { error -> Timber.e(error) }).disposeBy(this)
+    }
+
+    override fun toBundle(): StateBundle = StateBundle().apply { putInt("scrollY", actor_scrollview.scrollY) }
+
+    override fun fromBundle(bundle: StateBundle?) {
+        bundle?.apply { previousScrollPosition = getInt("scrollY", 0) }
     }
 
     @Parcelize

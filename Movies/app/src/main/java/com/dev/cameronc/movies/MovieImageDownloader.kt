@@ -14,11 +14,23 @@ import javax.inject.Singleton
 class MovieImageDownloader @Inject constructor(@Named(AppModule.SCREEN_WIDTH) val screenWidth: Int) {
     private var baseUrl: String = "https://image.tmdb.org/t/p/"
     private var posterWidth: String = "w500"
+    private val backdropWidth: String = "w780"
 
     fun load(posterPath: String?, view: ImageView): RequestBuilder<Drawable> {
         return if (posterPath != null) {
 
             val url = "$baseUrl$posterWidth/$posterPath"
+            Timber.v(url)
+            Glide.with(view).load(url)
+        } else {
+            Glide.with(view).load("")
+        }
+    }
+
+    fun loadBackdrop(backdropPath: String?, view: ImageView): RequestBuilder<Drawable> {
+        return if (backdropPath != null) {
+
+            val url = "$baseUrl$backdropWidth/$backdropPath"
             Timber.v(url)
             Glide.with(view).load(url)
         } else {

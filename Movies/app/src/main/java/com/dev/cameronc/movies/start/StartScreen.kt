@@ -1,63 +1,120 @@
 package com.dev.cameronc.movies.start
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Parcelable
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.util.AttributeSet
+import android.view.MenuItem
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.PopupWindow
 import android.widget.Toast
+import com.dev.cameronc.androidutilities.KeyboardHelper
 import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.movies.MovieImageDownloader
+import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
-import com.dev.cameronc.movies.appComponent
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
+import com.dev.cameronc.movies.options.OptionsScreen
+import com.dev.cameronc.movies.search.SearchResultsScreen
 import com.zhuinden.simplestack.Bundleable
 import com.zhuinden.simplestack.navigator.Navigator
 import com.zhuinden.simplestack.navigator.StateKey
 import com.zhuinden.simplestack.navigator.ViewChangeHandler
 import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
-import com.zhuinden.statebundle.StateBundle
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.synthetic.main.activity_start.view.*
+import timber.log.Timber
 import javax.inject.Inject
 
-class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleable {
+
+class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleable, SearchView.OnQueryTextListener, MenuItem.OnMenuItemClickListener {
+
     @Inject
     lateinit var viewModel: StartViewModel
     @Inject
     lateinit var imageDownloader: MovieImageDownloader
+    @Inject
+    lateinit var searchResultsAdapter: SearchResultAdapter
+    @Inject
+    lateinit var keyboardHelper: KeyboardHelper
 
     private lateinit var moviesAdapter: MovieCardAdapter
-    private lateinit var moviesList: RecyclerView
-    private var listState: Parcelable? = null
+    private val searchResultsRecyclerView: RecyclerView = RecyclerView(context).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.dark_grey)) }
+    private lateinit var searchResultsWindow: PopupWindow
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        if (!isInEditMode) context.appComponent().inject(this)
+        if (!isInEditMode) MoviesApp.activityComponent.inject(this)
     }
 
     override fun viewReady() {
         if (isInEditMode) return
 
-        moviesList = findViewById(R.id.start_movies)
+        searchResultsWindow = PopupWindow(searchResultsRecyclerView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        start_toolbar.menu.add(R.string.options).setOnMenuItemClickListener(this)
+
+        keyboardHelper.onGlobalLayout()
+        keyboardHelper.keyboardOpened = { setWindowSizeToContentSize() }
+        keyboardHelper.keyboardClosed = { searchResultsWindow.dismiss() }
+
+        movie_search_view.setOnQueryTextListener(this)
+        searchResultsRecyclerView.adapter = searchResultsAdapter
+        searchResultsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        searchResultsAdapter.resultClickListener = {
+            viewModel.onSearchEntered("")
+
+            keyboardHelper.dismissKeyboard()
+
+            searchResultsWindow.dismiss()
+            Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it))
+        }
+        viewModel.searchResults()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ results ->
+                    searchResultsAdapter.setSearchResults(results)
+                }, { error -> Timber.e(error) })
+                .disposeBy(this)
+
         moviesAdapter = MovieCardAdapter(imageDownloader, emptyList<UpcomingMovie>().toMutableList(), this)
-        moviesList.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.grid_columns))
-        moviesList.adapter = moviesAdapter
+        start_movies.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.grid_columns))
+        start_movies.adapter = moviesAdapter
 
         viewModel.getUpcomingMovies()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { movies ->
-                            moviesAdapter.addMovies(movies)
-                            moviesList.layoutManager?.onRestoreInstanceState(listState)
-                        },
-                        { error -> Toast.makeText(context, error.message, Toast.LENGTH_LONG).show() })
+                .subscribe({ movies ->
+                    moviesAdapter.addMovies(movies)
+                    if (viewState != null) restoreHierarchyState(viewState)
+                    viewState = null
+                }, { error -> Toast.makeText(context, error.message, Toast.LENGTH_LONG).show() })
                 .disposeBy(this)
+    }
+
+    private fun setWindowSizeToContentSize() {
+        val viewHeight = height
+        val rectangle = Rect()
+        activity.window.decorView.getWindowVisibleDisplayFrame(rectangle)
+
+        val windowHeight = viewHeight - start_toolbar.height
+        searchResultsWindow.height = windowHeight
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        if (searchResultsWindow.isShowing) searchResultsWindow.dismiss()
     }
 
     override fun loadMore() {
@@ -65,19 +122,37 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
     }
 
     override fun onItemClicked(tmdbId: Long) {
-//        val movieDetailIntent = MovieDetailActivity.newIntent(context as Activity, tmdbId)
-        //startActivity(movieDetailIntent)
         Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(tmdbId))
     }
 
-    override fun fromBundle(bundle: StateBundle?) {
-        listState = bundle?.getParcelable("scrollposition")
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        keyboardHelper.dismissKeyboard()
+        if (!query.isNullOrBlank()) Navigator.getBackstack(context).goTo(SearchResultsScreen.Key(query))
+        return true
     }
 
-    override fun toBundle(): StateBundle {
-        val stateBundle = StateBundle()
-        stateBundle.putParcelable("scrollposition", (moviesList.layoutManager as? LinearLayoutManager)?.onSaveInstanceState())
-        return stateBundle
+    override fun onQueryTextChange(query: String?): Boolean {
+        if (height > 0 && !searchResultsWindow.isShowing) searchResultsWindow.showAsDropDown(movie_search_view)
+        viewModel.queryTextChanged(query)
+
+        if (query.isNullOrBlank()) searchResultsWindow.dismiss()
+        return true
+    }
+
+    override fun handleBackPressed(): Boolean {
+        if (searchResultsWindow.isShowing) searchResultsWindow.dismiss() else return false
+
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+
+        return true
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return if (item.title == "Options") {
+            Navigator.getBackstack(context).goTo(OptionsScreen.Key())
+            true
+        } else false
     }
 
     @Parcelize

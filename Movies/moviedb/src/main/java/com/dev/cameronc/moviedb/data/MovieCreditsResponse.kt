@@ -13,7 +13,7 @@ data class MovieCreditsResponse(
 
 data class Cast(
         @SerializedName("cast_id")
-        val castId: Int,
+        val castId: Long,
         @SerializedName("character")
         val character: String,
         @SerializedName("credit_id")

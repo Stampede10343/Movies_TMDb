@@ -38,4 +38,7 @@ interface MovieDbApi {
 
     @GET("person/{person_id}/movie_credits")
     fun actorMovieCredits(@Path("person_id") personId: Long): Single<ActorCreditsResponse>
+
+    @GET("search/multi")
+    fun searchMulti(@Query("query") query: String): Single<MultiSearchResponse>
 }

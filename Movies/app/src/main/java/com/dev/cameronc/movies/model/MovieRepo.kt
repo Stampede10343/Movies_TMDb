@@ -8,7 +8,6 @@ import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -20,6 +19,7 @@ import javax.inject.Singleton
 class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                                     boxStore: BoxStore,
                                     private val movieMapper: MovieMapper) : MovieRepository {
+
     private val movieItemBox: Box<UpcomingMovie> = boxStore.boxFor(UpcomingMovie::class.java)
     private val getMoviesSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val moviesSubject: BehaviorSubject<List<UpcomingMovie>> = BehaviorSubject.create()
@@ -31,11 +31,7 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                 .flatMap { page ->
                     val remoteMovies = getMoviesFromApi(page)
                     val localMovies = getMoviesFromBox(page)
-                            .subscribeOn(AndroidSchedulers.mainThread())
-                            .observeOn(AndroidSchedulers.mainThread())
                     Observable.concat<List<UpcomingMovie>>(localMovies, remoteMovies)
-                            .firstElement()
-                            .toObservable()
                 }
                 .subscribeOn(Schedulers.io())
                 .map {
@@ -62,7 +58,8 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
 
     private fun getMoviesFromApi(page: String): Observable<List<UpcomingMovie>> =
             movieDbApi.getUpcomingMovies(page)
-                    .subscribeOn(Schedulers.io()).map { it.results }
+                    .subscribeOn(Schedulers.io())
+                    .map { it.results }
                     .map { movies ->
                         movies.map { movieResponseItem -> movieMapper.mapMovieResponseToUpcomingMovie(movieResponseItem) }
                     }
@@ -91,4 +88,6 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
     override fun getMovieCredits(movieId: Long): Observable<MovieCreditsResponse> = movieDbApi.movieCredits(movieId).toObservable()
 
     override fun getSimilarMovies(movieId: Long): Observable<SimilarMoviesResponse> = movieDbApi.similarMovies(movieId).toObservable()
+
+    override fun searchAll(query: String): Observable<MultiSearchResponse> = movieDbApi.searchMulti(query).toObservable()
 }

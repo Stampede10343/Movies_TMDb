@@ -1,6 +1,7 @@
 package com.dev.cameronc.movies
 
 import android.app.Application
+import com.dev.cameronc.movies.di.ActivityComponent
 import com.dev.cameronc.movies.di.AppComponent
 import com.dev.cameronc.movies.di.AppModule
 import com.dev.cameronc.movies.di.DaggerAppComponent
@@ -24,6 +25,7 @@ class MoviesApp : Application() {
 
     companion object {
         lateinit var app: MoviesApp
+        lateinit var activityComponent: ActivityComponent
     }
 
 }

@@ -16,10 +16,6 @@ class MovieActorAdapter @Inject constructor(private val imageDownloader: MovieIm
     private lateinit var cast: List<Cast>
     private lateinit var clickListener: (actorId: Long) -> Unit
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder =
             ActorViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.actor_grid_item, parent, false))
@@ -37,8 +33,6 @@ class MovieActorAdapter @Inject constructor(private val imageDownloader: MovieIm
     }
 
     override fun getItemCount(): Int = cast.size
-
-    override fun getItemId(position: Int): Long = cast[position].id.toLong()
 
     fun setActors(cast: List<Cast>) {
         this.cast = cast.asSequence().toHashSet().asSequence().sortedBy { it.order }.toList()

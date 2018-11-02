@@ -13,4 +13,5 @@ interface MovieRepository {
     fun getMovieDetails(movieId: Long): Observable<MovieDetailsResponse>
     fun getMovieCredits(movieId: Long): Observable<MovieCreditsResponse>
     fun getSimilarMovies(movieId: Long): Observable<SimilarMoviesResponse>
+    fun searchAll(query: String): Observable<MultiSearchResponse>
 }

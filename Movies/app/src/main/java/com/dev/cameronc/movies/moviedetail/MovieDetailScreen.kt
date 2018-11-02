@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.os.Parcelable
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.View
@@ -14,25 +15,27 @@ import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.androidutilities.view.MarginItemDecoration
 import com.dev.cameronc.moviedb.data.ReleaseResult
 import com.dev.cameronc.movies.MovieImageDownloader
+import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.actor.ActorScreen
-import com.dev.cameronc.movies.appComponent
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import com.dev.cameronc.movies.toDp
 import com.zhuinden.simplestack.Backstack
+import com.zhuinden.simplestack.Bundleable
 import com.zhuinden.simplestack.navigator.Navigator
 import com.zhuinden.simplestack.navigator.StateKey
 import com.zhuinden.simplestack.navigator.ViewChangeHandler
 import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
+import com.zhuinden.statebundle.StateBundle
 import io.objectbox.BoxStore
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.activity_movie_detail.view.*
+import kotlinx.android.synthetic.main.movie_detail_screen.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class MovieDetailScreen : BaseScreen {
+class MovieDetailScreen : BaseScreen, Bundleable {
     @Inject
     lateinit var movieDetailViewModel: MovieDetailViewModel
     @Inject
@@ -45,18 +48,21 @@ class MovieDetailScreen : BaseScreen {
     lateinit var relatedMovieAdapter: RelatedMovieAdapter
 
     private var movie: UpcomingMovie? = null
+    private var previousScrollY: Int = 0
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
     init {
-        if (!isInEditMode) context.appComponent().inject(this)
+        if (!isInEditMode) MoviesApp.activityComponent.inject(this)
     }
 
     override fun viewReady() {
         if (isInEditMode) return
         val movieId = Backstack.getKey<MovieDetailKey>(context).tmdbId
         movie = objectBox.boxFor(UpcomingMovie::class.java).get(movieId)
+
+        setListMargins()
 
         movieDetailViewModel.getMovieDetails(movieId)
                 .subscribeOn(Schedulers.io())
@@ -76,10 +82,8 @@ class MovieDetailScreen : BaseScreen {
                     movie_detail_genre_list.visibility = View.VISIBLE
                     movie_detail_genre_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                     movie_detail_genre_list.adapter = MovieGenreAdapter(detailResponse.genres.asSequence().map { it.name }.toMutableList())
-                    val margin = 4.toDp()
-                    movie_detail_genre_list.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
 
-                    imageDownloader.load(detailResponse.posterPath, movie_detail_poster)
+                    imageDownloader.loadBackdrop(detailResponse.backdropPath, movie_detail_poster)
                             .apply(RequestOptions.centerCropTransform())
                             .apply(RequestOptions().placeholder(R.color.dark_grey))
                             .into(movie_detail_poster)
@@ -97,8 +101,6 @@ class MovieDetailScreen : BaseScreen {
                     actorAdapter.onActorClicked {
                         Navigator.getBackstack(context).goTo(ActorScreen.ActorScreenKey(it))
                     }
-                    val margin = 8.toDp()
-                    movie_detail_actors.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
                     movie_detail_actors.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
                     movie_detail_actors.adapter = actorAdapter
                 }, { error ->
@@ -109,12 +111,14 @@ class MovieDetailScreen : BaseScreen {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ relatedResponse ->
-                    val margin = 8.toDp()
-                    movie_detail_related_movies.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
                     movie_detail_related_movies.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
                     relatedMovieAdapter.relatedMovies = relatedResponse.results
                     relatedMovieAdapter.relatedMovieClickListener = { Navigator.getBackstack(context).goTo(MovieDetailKey(it)) }
                     movie_detail_related_movies.adapter = relatedMovieAdapter
+
+                    postDelayed({
+                        restoreHierarchyState(viewState)
+                    }, 100)
                 }, { error -> Timber.e(error) }).disposeBy(this)
 
         if (movie != null) {
@@ -126,6 +130,22 @@ class MovieDetailScreen : BaseScreen {
             movie_detail_genre_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             movie_detail_description.text = movie!!.overview
         }
+    }
+
+    private fun setListMargins() {
+        val genreMargin = 4.toDp()
+        (movie_detail_genre_list as RecyclerView).addItemDecoration(MarginItemDecoration(Rect(genreMargin, genreMargin, genreMargin, genreMargin)))
+        val posterMargin = 8.toDp()
+        movie_detail_actors.addItemDecoration(MarginItemDecoration(Rect(posterMargin, posterMargin, posterMargin, posterMargin)))
+        movie_detail_related_movies.addItemDecoration(MarginItemDecoration(
+                Rect(posterMargin, posterMargin, posterMargin, posterMargin)))
+    }
+
+    override fun toBundle(): StateBundle = super.toBundle().apply { putInt("scrollY", movie_detail_scrollview.scrollY) }
+
+    override fun fromBundle(bundle: StateBundle?) {
+        super.fromBundle(bundle)
+        previousScrollY = bundle?.getInt("scrollY") ?: 0
     }
 
     @Parcelize

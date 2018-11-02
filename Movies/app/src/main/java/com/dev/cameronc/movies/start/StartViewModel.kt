@@ -21,6 +21,8 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
     private val subscriptions = CompositeDisposable()
     private val currentPageSubject = BehaviorSubject.create<Int>()
     private val upcomingMoviesSubject = BehaviorSubject.create<MutableList<UpcomingMovie>>()
+    private val searchResults: BehaviorSubject<List<SearchResult>> = BehaviorSubject.create()
+    private val searchQuerySubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     init {
         subscriptions.add(currentPageSubject
@@ -35,6 +37,16 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
                 .takeUntil { currentPageSubject.value == 10 }
                 .subscribe({ movies ->
                     upcomingMoviesSubject.onNext(movies)
+                }, { error -> Timber.e(error) }))
+
+        subscriptions.add(searchQuerySubject
+                .debounce(250, TimeUnit.MILLISECONDS)
+                .filter { it.isNotEmpty() }
+                .flatMap { movieRepository.searchMovies(it).subscribeOn(Schedulers.io()) }
+                .map { searchResponse -> searchResponse.results.sortedByDescending { it.popularity } }
+                .map { sortedResults -> sortedResults.map { SearchResult(it.id, it.posterPath, it.title) } }
+                .subscribe({ results ->
+                    searchResults.onNext(results)
                 }, { error -> Timber.e(error) }))
     }
 
@@ -79,4 +91,10 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
         super.onCleared()
         subscriptions.dispose()
     }
+
+    fun queryTextChanged(query: String?) {
+        if (query != null) searchQuerySubject.onNext(query)
+    }
+
+    fun searchResults(): Observable<List<SearchResult>> = searchResults
 }

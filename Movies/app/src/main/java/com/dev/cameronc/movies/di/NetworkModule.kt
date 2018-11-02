@@ -3,6 +3,7 @@ package com.dev.cameronc.movies.di
 import android.content.Context
 import android.net.ConnectivityManager
 import com.dev.cameronc.moviedb.api.MovieDbApi
+import com.dev.cameronc.movies.BuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -40,7 +41,7 @@ class NetworkModule {
             val request = chain.request()
             val url = request.url()
                     .newBuilder()
-                    .addQueryParameter("api_key", "***REMOVED***")
+                    .addQueryParameter("api_key", BuildConfig.API_KEY)
                     .build()
             chain.proceed(request.newBuilder().url(url).build())
         }

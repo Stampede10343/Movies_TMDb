@@ -1,11 +1,12 @@
 package com.dev.cameronc.androidutilities.view
 
-import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
+import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.widget.FrameLayout
+import com.dev.cameronc.androidutilities.AnalyticTracker
 import com.zhuinden.simplestack.Bundleable
 import com.zhuinden.statebundle.StateBundle
 import io.reactivex.disposables.CompositeDisposable
@@ -17,19 +18,23 @@ abstract class BaseScreen : FrameLayout, Bundleable {
     protected var viewState: SparseArray<Parcelable>? = null
 
     @Inject
-    lateinit var activity: Activity
+    lateinit var activity: AppCompatActivity
+    @Inject
+    lateinit var analyticTracker: AnalyticTracker
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     abstract fun viewReady()
+    abstract fun getScreenName(): String
 
     open fun handleBackPressed(): Boolean = false
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         viewReady()
+        if (!isInEditMode) analyticTracker.trackScreenHit(getScreenName())
     }
 
     override fun onDetachedFromWindow() {

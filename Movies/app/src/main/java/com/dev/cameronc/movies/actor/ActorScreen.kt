@@ -102,6 +102,8 @@ class ActorScreen : BaseScreen, Bundleable {
                 }, { error -> Timber.e(error) }).disposeBy(this)
     }
 
+    override fun getScreenName(): String = "Actor"
+
     override fun toBundle(): StateBundle = StateBundle().apply { putInt("scrollY", actor_scrollview.scrollY) }
 
     override fun fromBundle(bundle: StateBundle?) {

@@ -19,6 +19,7 @@ import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.actor.ActorScreen
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
+import com.dev.cameronc.movies.start.StartScreen
 import com.dev.cameronc.movies.toDp
 import com.zhuinden.simplestack.Backstack
 import com.zhuinden.simplestack.Bundleable
@@ -59,6 +60,9 @@ class MovieDetailScreen : BaseScreen, Bundleable {
 
     override fun viewReady() {
         if (isInEditMode) return
+
+        movie_detail_toolbar.setNavigationOnClickListener { Navigator.getBackstack(context).goUp(StartScreen.StartKey()) }
+
         val movieId = Backstack.getKey<MovieDetailKey>(context).tmdbId
         movie = objectBox.boxFor(UpcomingMovie::class.java).get(movieId)
 
@@ -140,6 +144,8 @@ class MovieDetailScreen : BaseScreen, Bundleable {
         movie_detail_related_movies.addItemDecoration(MarginItemDecoration(
                 Rect(posterMargin, posterMargin, posterMargin, posterMargin)))
     }
+
+    override fun getScreenName(): String = "Movie Detail"
 
     override fun toBundle(): StateBundle = super.toBundle().apply { putInt("scrollY", movie_detail_scrollview.scrollY) }
 

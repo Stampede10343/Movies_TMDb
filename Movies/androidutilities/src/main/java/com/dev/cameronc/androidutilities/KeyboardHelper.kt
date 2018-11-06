@@ -1,7 +1,7 @@
 package com.dev.cameronc.androidutilities
 
-import android.app.Activity
 import android.content.Context
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
@@ -9,7 +9,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class KeyboardHelper @Inject constructor(private val activity: Activity) : ViewTreeObserver.OnGlobalLayoutListener {
+class KeyboardHelper @Inject constructor(private val activity: AppCompatActivity) : ViewTreeObserver.OnGlobalLayoutListener {
     var keyboardOpened: (() -> Unit)? = null
     var keyboardClosed: (() -> Unit)? = null
 

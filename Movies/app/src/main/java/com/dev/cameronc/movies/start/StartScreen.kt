@@ -31,7 +31,7 @@ import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.activity_start.view.*
+import kotlinx.android.synthetic.main.start_screen.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -62,6 +62,7 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
     override fun viewReady() {
         if (isInEditMode) return
 
+        start_toolbar.navigationIcon = null
         searchResultsWindow = PopupWindow(searchResultsRecyclerView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         start_toolbar.menu.add(R.string.options).setOnMenuItemClickListener(this)
@@ -112,6 +113,8 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
         searchResultsWindow.height = windowHeight
     }
 
+    override fun getScreenName(): String = "Start Screen"
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         if (searchResultsWindow.isShowing) searchResultsWindow.dismiss()
@@ -149,15 +152,16 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        return if (item.title == "Options") {
-            Navigator.getBackstack(context).goTo(OptionsScreen.Key())
-            true
-        } else false
+        if (item.title == "Options") {
+            post { Navigator.getBackstack(context).goTo(OptionsScreen.Key()) }
+        }
+
+        return false
     }
 
     @Parcelize
     class StartKey : StateKey, Parcelable {
-        override fun layout(): Int = R.layout.activity_start
+        override fun layout(): Int = R.layout.start_screen
         override fun viewChangeHandler(): ViewChangeHandler = SegueViewChangeHandler()
     }
 }

@@ -7,4 +7,10 @@
     <string name="actor_born">Born %1$s</string>
     <string name="movie_credits">Movie Credits</string>
     <string name="actor_died">Died %1$s</string>
+    <string name="options">Options</string>
+    <string name="third_party_libraries">Third-Party Libraries</string>
+    <string name="licenses_and_legal_notices">Licenses and legal notices</string>
+    <string name="theme">Theme</string>
+    <string name="change_app_theme">Change the theme of the app</string>
+    <string name="dark_theme">Dark Theme</string>
 </resources>

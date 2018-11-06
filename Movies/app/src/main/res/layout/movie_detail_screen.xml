@@ -15,11 +15,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/movie_detail_toolbar"
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                app:title="Movie Detail" />
+
             <com.dev.cameronc.androidutilities.view.RatioImageView
                 android:id="@+id/movie_detail_poster"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/movie_detail_toolbar"
                 android:scaleType="centerCrop"
                 app:ratio=".75"
                 tools:srcCompat="@drawable/were_the_millers" />
@@ -108,7 +116,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/cast"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                        android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -123,10 +130,10 @@
                         tools:listitem="@layout/actor_grid_item" />
 
                     <TextView
+                        style="@style/TextAppearance.AppCompat.Headline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/related"
-                        android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 

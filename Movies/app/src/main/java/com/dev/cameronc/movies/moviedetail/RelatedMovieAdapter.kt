@@ -15,10 +15,6 @@ class RelatedMovieAdapter @Inject constructor(private val movieImageDownloader: 
     lateinit var relatedMovies: List<Result>
     lateinit var relatedMovieClickListener: (movieId: Long) -> Unit
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RelatedMovieViewHolder =
             RelatedMovieViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.related_movie_item, parent, false))
 
@@ -33,7 +29,6 @@ class RelatedMovieAdapter @Inject constructor(private val movieImageDownloader: 
 
     override fun getItemCount(): Int = relatedMovies.size
 
-    override fun getItemId(position: Int): Long = relatedMovies[position].id.toLong()
 }
 
 class RelatedMovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

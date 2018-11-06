@@ -6,10 +6,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actorItemTheme">@style/ActorItem</item>
+        <item name="toolbarStyle">@style/Toolbar</item>
     </style>
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="actorItemTheme">@style/ActorItem.Light</item>
+        <item name="toolbarStyle">@style/Toolbar</item>
     </style>
 
     <style name="ActorItem">
@@ -18,5 +23,24 @@
 
     <style name="ActorItem.Light">
         <item name="android:background">@color/dark_white</item>
+    </style>
+
+    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="navigationIcon">?attr/homeAsUpIndicator</item>
+
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:theme">@style/ToolbarTheme</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="titleTextAppearance">@style/CustomTitleTextAppearance</item>
+    </style>
+
+    <style name="CustomTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ToolbarTheme">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 </resources>

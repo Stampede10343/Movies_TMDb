@@ -15,10 +15,16 @@ class MoviesApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Timber.plant(Timber.DebugTree())
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
         JodaTimeAndroid.init(this)
         app = this
-        appComponent = DaggerAppComponent.builder().app(this).appModule(AppModule(this)).build()
+        appComponent = DaggerAppComponent
+                .builder()
+                .app(this)
+                .appModule(AppModule(this))
+                .build()
     }
 
     fun getAppComponent(): AppComponent = appComponent

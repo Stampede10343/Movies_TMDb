@@ -3,6 +3,8 @@ package com.dev.cameronc.movies.di
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.dev.cameronc.androidutilities.AnalyticTracker
+import com.dev.cameronc.movies.LoggingAnalyticsTracker
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.model.MovieRepo
 import com.dev.cameronc.movies.model.MovieRepository
@@ -35,6 +37,9 @@ class AppModule(
     @Singleton
     fun objectBox(context: Context): BoxStore =
             MyObjectBox.builder().androidContext(context).build()
+
+    @Provides
+    fun analyticsTracker(analyticsTracker: LoggingAnalyticsTracker): AnalyticTracker = analyticsTracker
 
     companion object {
         const val SCREEN_WIDTH = "screenWidth"

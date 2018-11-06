@@ -1,5 +1,6 @@
 package com.dev.cameronc.movies.model
 
+import com.dev.cameronc.androidutilities.AnalyticTracker
 import com.dev.cameronc.moviedb.api.MovieDbApi
 import com.dev.cameronc.moviedb.data.*
 import com.dev.cameronc.movies.model.movie.MovieMapper
@@ -18,7 +19,8 @@ import javax.inject.Singleton
 @Singleton
 class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                                     boxStore: BoxStore,
-                                    private val movieMapper: MovieMapper) : MovieRepository {
+                                    private val movieMapper: MovieMapper,
+                                    private val analyticTracker: AnalyticTracker) : MovieRepository {
 
     private val movieItemBox: Box<UpcomingMovie> = boxStore.boxFor(UpcomingMovie::class.java)
     private val getMoviesSubject: BehaviorSubject<String> = BehaviorSubject.create()
@@ -33,6 +35,7 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                     val localMovies = getMoviesFromBox(page)
                     Observable.concat<List<UpcomingMovie>>(localMovies, remoteMovies)
                 }
+                .doOnNext { analyticTracker.trackEvent("Movies loaded. Page: ${getMoviesSubject.value}. Count: ${it.size}") }
                 .subscribeOn(Schedulers.io())
                 .map {
                     val allMoviesCached = moviesSubject.value?.toMutableSet()
@@ -81,13 +84,24 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
             movieDbApi.getConfiguration()
 
     override fun searchMovies(query: String): Observable<SearchResponse> = movieDbApi.search(query)
+            .doOnNext { analyticTracker.trackEvent("Search Movies: $query") }
 
     override fun getMovieDetails(movieId: Long): Observable<MovieDetailsResponse> =
             movieDbApi.movieDetails(movieId).toObservable()
+                    .doOnNext { analyticTracker.trackEvent("Get Movie Details: $movieId") }
 
-    override fun getMovieCredits(movieId: Long): Observable<MovieCreditsResponse> = movieDbApi.movieCredits(movieId).toObservable()
+    override fun getMovieCredits(movieId: Long): Observable<MovieCreditsResponse> =
+            movieDbApi.movieCredits(movieId)
+                    .toObservable()
+                    .doOnNext { analyticTracker.trackEvent("Get Movie Credits: $movieId") }
 
-    override fun getSimilarMovies(movieId: Long): Observable<SimilarMoviesResponse> = movieDbApi.similarMovies(movieId).toObservable()
+    override fun getSimilarMovies(movieId: Long): Observable<SimilarMoviesResponse> =
+            movieDbApi.similarMovies(movieId)
+                    .toObservable()
+                    .doOnNext { analyticTracker.trackEvent("Get SimilarMovies $movieId. Count: ${it.results.size}") }
 
-    override fun searchAll(query: String): Observable<MultiSearchResponse> = movieDbApi.searchMulti(query).toObservable()
+    override fun searchAll(query: String): Observable<MultiSearchResponse> =
+            movieDbApi.searchMulti(query)
+                    .toObservable()
+                    .doOnNext { analyticTracker.trackEvent("Search: $query. Count: ${it.results.size}") }
 }

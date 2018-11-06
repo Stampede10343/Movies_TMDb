@@ -13,6 +13,7 @@ import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
+import com.zhuinden.simplestack.Backstack
 import com.zhuinden.simplestack.navigator.Navigator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.parcel.Parcelize
@@ -37,6 +38,8 @@ class SearchResultsScreen : BaseScreen, SearchView.OnQueryTextListener {
         MoviesApp.activityComponent.inject(this)
 
         search_results_searchview.setOnQueryTextListener(this)
+        val key = Backstack.getKey<Key>(context)
+        search_results_searchview.setQuery(key.query, true)
 
         search_results_list.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false)
         val dividerItemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
@@ -60,8 +63,9 @@ class SearchResultsScreen : BaseScreen, SearchView.OnQueryTextListener {
                     viewState = null
                 }, { error -> Timber.e(error) }).disposeBy(this)
 
-        viewModel.updateQuery("House")
     }
+
+    override fun getScreenName(): String = "Search Results Screen"
 
     override fun onQueryTextChange(query: String?): Boolean {
         viewModel.updateQuery(query)
@@ -73,9 +77,8 @@ class SearchResultsScreen : BaseScreen, SearchView.OnQueryTextListener {
         return true
     }
 
-
     @Parcelize
-    data class Key(private val query: String) : BaseKey(), Parcelable {
+    data class Key(internal val query: String) : BaseKey(), Parcelable {
         override fun layout(): Int = R.layout.search_results_screen
     }
 }

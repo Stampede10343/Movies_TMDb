@@ -2,6 +2,7 @@ package com.dev.cameronc.movies
 
 import android.os.Bundle
 import android.view.ViewGroup
+import com.dev.cameronc.androidutilities.KeyboardHelper
 import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.movies.options.ThemeManager
 import com.dev.cameronc.movies.start.StartScreen
@@ -13,6 +14,8 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var themeManager: ThemeManager
+    @Inject
+    lateinit var keyboardHelper: KeyboardHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MoviesApp.activityComponent = getAppComponent().plusActivity().activity(this).build()
@@ -21,6 +24,11 @@ class MainActivity : BaseActivity() {
 
         super.onCreate(savedInstanceState)
         Navigator.install(this, findViewById(android.R.id.content), History.single(StartScreen.StartKey()))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        keyboardHelper.clearListener()
     }
 
     override fun onBackPressed() {

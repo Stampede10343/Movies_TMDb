@@ -9,15 +9,26 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class KeyboardHelper @Inject constructor(private val activity: AppCompatActivity) : ViewTreeObserver.OnGlobalLayoutListener {
+class KeyboardHelper @Inject constructor(private val activity: AppCompatActivity) {
     var keyboardOpened: (() -> Unit)? = null
     var keyboardClosed: (() -> Unit)? = null
 
     private var isOpened: Boolean = false
+    private var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+        set(value) {
+            val activityRootView = activity.window.decorView.findViewById<View>(android.R.id.content)
+            activityRootView.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+            field = value
+        }
 
-    override fun onGlobalLayout() {
+    fun dismissKeyboard() {
+        val imm: InputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(activity.findViewById<View>(android.R.id.content).windowToken, 0)
+    }
+
+    fun listenForKeyboard() {
         val activityRootView = activity.window.decorView.findViewById<View>(android.R.id.content)
-        activityRootView.viewTreeObserver.addOnGlobalLayoutListener {
+        layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
             val heightDiff = activityRootView.rootView.height - activityRootView.height
             if (heightDiff > 300) { // 99% of the time the height diff will be due to a keyboard.
                 // Opened
@@ -32,11 +43,13 @@ class KeyboardHelper @Inject constructor(private val activity: AppCompatActivity
                 keyboardClosed?.invoke()
                 Timber.v("Keyboard closed")
             }
+            activityRootView.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         }
     }
 
-    fun dismissKeyboard() {
-        val imm: InputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(activity.findViewById<View>(android.R.id.content).windowToken, 0)
+    fun clearListener() {
+        val activityRootView = activity.window.decorView.findViewById<View>(android.R.id.content)
+        activityRootView.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        layoutListener = null
     }
 }

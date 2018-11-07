@@ -67,7 +67,7 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
 
         start_toolbar.menu.add(R.string.options).setOnMenuItemClickListener(this)
 
-        keyboardHelper.onGlobalLayout()
+        keyboardHelper.listenForKeyboard()
         keyboardHelper.keyboardOpened = { setWindowSizeToContentSize() }
         keyboardHelper.keyboardClosed = { searchResultsWindow.dismiss() }
 

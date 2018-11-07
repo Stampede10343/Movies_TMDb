@@ -5,6 +5,7 @@ import com.dev.cameronc.movies.di.ActivityComponent
 import com.dev.cameronc.movies.di.AppComponent
 import com.dev.cameronc.movies.di.AppModule
 import com.dev.cameronc.movies.di.DaggerAppComponent
+import com.squareup.leakcanary.LeakCanary
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
 
@@ -19,6 +20,9 @@ class MoviesApp : Application() {
             Timber.plant(Timber.DebugTree())
         }
         JodaTimeAndroid.init(this)
+
+        LeakCanary.install(this)
+
         app = this
         appComponent = DaggerAppComponent
                 .builder()

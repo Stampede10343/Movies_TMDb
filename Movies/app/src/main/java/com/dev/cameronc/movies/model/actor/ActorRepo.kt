@@ -1,8 +1,8 @@
 package com.dev.cameronc.movies.model.actor
 
-import com.dev.cameronc.androidutilities.AnalyticTracker
 import com.dev.cameronc.moviedb.api.MovieDbApi
 import com.dev.cameronc.moviedb.data.actor.ActorCreditsResponse
+import com.dev.cameronc.androidutilities.AnalyticTrackingHelper
 import io.objectbox.BoxStore
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActorRepo @Inject constructor(private val movieDbApi: MovieDbApi, boxStore: BoxStore, private val actorMapper: ActorMapper, private val analyticTracker: AnalyticTracker) {
+class ActorRepo @Inject constructor(private val movieDbApi: MovieDbApi, boxStore: BoxStore, private val actorMapper: ActorMapper, private val analyticTracker: AnalyticTrackingHelper) {
     private val actorCache: MutableMap<Long, ActorDetails> = emptyMap<Long, ActorDetails>().toMutableMap()
     private val actorBox = boxStore.boxFor(ActorDetails::class.java)
     private val actorDetailsSubject = PublishSubject.create<ActorDetails>()

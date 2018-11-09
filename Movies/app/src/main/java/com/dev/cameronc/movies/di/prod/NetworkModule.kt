@@ -1,4 +1,4 @@
-package com.dev.cameronc.movies.di
+package com.dev.cameronc.movies.di.prod
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -49,7 +49,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun httpCache(context: Context): Cache = Cache(File(context.cacheDir, "cache"), 30 * 1024 * 1024)
+    fun httpCache(context: Context): Cache = Cache(File(context.cacheDir, "httpcache"), 30 * 1024 * 1024)
 
     @Provides
     fun provideHttpClient(@ApiInterceptor apiInterceptor: Interceptor,

@@ -1,7 +1,7 @@
 package com.dev.cameronc.movies
 
 import android.support.v7.app.AppCompatActivity
-import com.dev.cameronc.movies.di.AppComponent
+import com.dev.cameronc.movies.di.prod.AppComponent
 
 open class BaseActivity: AppCompatActivity()
 {

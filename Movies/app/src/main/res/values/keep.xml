@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:discard="@drawable/were_the_millers"
+    tools:keep="@drawable/rounded_genre_tag_background,@layout/genre_tag_layout" />

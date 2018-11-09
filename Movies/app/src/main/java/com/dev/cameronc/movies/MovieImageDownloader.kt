@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
-import com.dev.cameronc.movies.di.AppModule
+import com.dev.cameronc.movies.di.prod.AppModule
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named

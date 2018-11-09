@@ -1,10 +1,10 @@
 package com.dev.cameronc.movies
 
 import android.app.Application
-import com.dev.cameronc.movies.di.ActivityComponent
-import com.dev.cameronc.movies.di.AppComponent
-import com.dev.cameronc.movies.di.AppModule
-import com.dev.cameronc.movies.di.DaggerAppComponent
+import com.dev.cameronc.movies.di.prod.ActivityComponent
+import com.dev.cameronc.movies.di.prod.AppComponent
+import com.dev.cameronc.movies.di.prod.AppModule
+import com.dev.cameronc.movies.di.prod.DaggerAppComponent
 import com.squareup.leakcanary.LeakCanary
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber

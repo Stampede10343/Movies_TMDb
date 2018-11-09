@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.widget.FrameLayout
-import com.dev.cameronc.androidutilities.AnalyticTracker
+import com.dev.cameronc.androidutilities.AnalyticTrackingHelper
 import com.zhuinden.simplestack.Bundleable
 import com.zhuinden.statebundle.StateBundle
 import io.reactivex.disposables.CompositeDisposable
@@ -20,7 +20,7 @@ abstract class BaseScreen : FrameLayout, Bundleable {
     @Inject
     lateinit var activity: AppCompatActivity
     @Inject
-    lateinit var analyticTracker: AnalyticTracker
+    lateinit var analyticTracker: AnalyticTrackingHelper
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

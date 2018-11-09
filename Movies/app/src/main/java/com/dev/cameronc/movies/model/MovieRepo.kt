@@ -5,6 +5,7 @@ import com.dev.cameronc.androidutilities.AnalyticTrackingHelper
 import com.dev.cameronc.moviedb.api.MovieDbApi
 import com.dev.cameronc.moviedb.data.*
 import com.dev.cameronc.movies.model.movie.MovieMapper
+import com.dev.cameronc.movies.model.movie.MovieReview
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import io.objectbox.Box
 import io.objectbox.BoxStore
@@ -118,4 +119,10 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
             movieDbApi.searchMulti(query)
                     .toObservable()
                     .doOnNext { analyticTracker.trackEvent("Search: $query. Count: ${it.results.size}") }
+
+    override fun getMovieReviews(movieId: Long): Observable<List<MovieReview>> =
+            movieDbApi.movieReview(movieId)
+                    .toObservable()
+                    .doOnNext { analyticTracker.trackEvent("Get Movie Reviews: $movieId") }
+                    .map { movieResponse -> movieResponse.results.map { movieMapper.mapMovieReviewResponseToMovieReview(it) } }
 }

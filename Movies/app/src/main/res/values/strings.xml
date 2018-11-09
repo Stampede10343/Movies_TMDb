@@ -13,4 +13,5 @@
     <string name="theme">Theme</string>
     <string name="change_app_theme">Change the theme of the app</string>
     <string name="dark_theme">Dark Theme</string>
+    <string name="ratings">Ratings</string>
 </resources>

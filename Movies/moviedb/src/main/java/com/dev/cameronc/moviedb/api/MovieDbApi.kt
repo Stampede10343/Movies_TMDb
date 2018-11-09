@@ -41,4 +41,7 @@ interface MovieDbApi {
 
     @GET("search/multi")
     fun searchMulti(@Query("query") query: String): Single<MultiSearchResponse>
+
+    @GET("movie/{movie_id}/reviews")
+    fun movieReview(@Path("movie_id") movieId: Long): Single<MovieReviewResponse>
 }

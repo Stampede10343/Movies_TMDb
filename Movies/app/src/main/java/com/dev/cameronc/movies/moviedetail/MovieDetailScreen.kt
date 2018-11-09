@@ -47,6 +47,8 @@ class MovieDetailScreen : BaseScreen, Bundleable {
     lateinit var actorAdapter: MovieActorAdapter
     @Inject
     lateinit var relatedMovieAdapter: RelatedMovieAdapter
+    @Inject
+    lateinit var reviewAdapter: MovieReviewAdapter
 
     private var movie: UpcomingMovie? = null
     private var previousScrollY: Int = 0
@@ -123,6 +125,15 @@ class MovieDetailScreen : BaseScreen, Bundleable {
                     postDelayed({
                         restoreHierarchyState(viewState)
                     }, 100)
+                }, { error -> Timber.e(error) }).disposeBy(this)
+
+        movieDetailViewModel.getMovieReviews(movieId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ reviews ->
+                    movie_detail_ratings.layoutManager = LinearLayoutManager(context)
+                    movie_detail_ratings.adapter = reviewAdapter
+                    reviewAdapter.setReviews(reviews)
                 }, { error -> Timber.e(error) }).disposeBy(this)
 
         if (movie != null) {

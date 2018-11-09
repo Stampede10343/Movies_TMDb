@@ -5,6 +5,7 @@ import com.dev.cameronc.moviedb.data.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.SimilarMoviesResponse
 import com.dev.cameronc.movies.model.MovieRepo
+import com.dev.cameronc.movies.model.movie.MovieReview
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -18,4 +19,7 @@ class MovieDetailViewModel @Inject constructor(private val movieRepo: MovieRepo)
 
     fun getRelatedMovies(movieId: Long): Observable<SimilarMoviesResponse> =
             movieRepo.getSimilarMovies(movieId)
+
+    fun getMovieReviews(movieId: Long): Observable<List<MovieReview>> =
+            movieRepo.getMovieReviews(movieId)
 }

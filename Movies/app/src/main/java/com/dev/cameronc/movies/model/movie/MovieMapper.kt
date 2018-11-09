@@ -1,6 +1,7 @@
 package com.dev.cameronc.movies.model.movie
 
 import com.dev.cameronc.moviedb.data.MovieResponseItem
+import com.dev.cameronc.moviedb.data.ReviewResult
 import javax.inject.Inject
 
 class MovieMapper @Inject constructor() {
@@ -11,4 +12,7 @@ class MovieMapper @Inject constructor() {
                 movieResponseItem.originalLanguage, movieResponseItem.title, movieResponseItem.backdropPath,
                 movieResponseItem.popularity)
     }
+
+    fun mapMovieReviewResponseToMovieReview(responseReview: ReviewResult): MovieReview =
+            MovieReview(responseReview.id, responseReview.author, responseReview.content)
 }

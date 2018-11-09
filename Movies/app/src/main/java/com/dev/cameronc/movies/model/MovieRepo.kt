@@ -1,6 +1,7 @@
 package com.dev.cameronc.movies.model
 
-import com.dev.cameronc.androidutilities.AnalyticTracker
+import android.content.SharedPreferences
+import com.dev.cameronc.androidutilities.AnalyticTrackingHelper
 import com.dev.cameronc.moviedb.api.MovieDbApi
 import com.dev.cameronc.moviedb.data.*
 import com.dev.cameronc.movies.model.movie.MovieMapper
@@ -12,6 +13,8 @@ import io.reactivex.ObservableSource
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,7 +23,8 @@ import javax.inject.Singleton
 class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                                     boxStore: BoxStore,
                                     private val movieMapper: MovieMapper,
-                                    private val analyticTracker: AnalyticTracker) : MovieRepository {
+                                    private val analyticTracker: AnalyticTrackingHelper,
+                                    private val preferences: SharedPreferences) : MovieRepository {
 
     private val movieItemBox: Box<UpcomingMovie> = boxStore.boxFor(UpcomingMovie::class.java)
     private val getMoviesSubject: BehaviorSubject<String> = BehaviorSubject.create()
@@ -32,7 +36,7 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                 .distinct()
                 .flatMap { page ->
                     val remoteMovies = getMoviesFromApi(page)
-                    val localMovies = getMoviesFromBox(page)
+                    val localMovies = getMoviesFromBox()
                     Observable.concat<List<UpcomingMovie>>(localMovies, remoteMovies)
                 }
                 .doOnNext { analyticTracker.trackEvent("Movies loaded. Page: ${getMoviesSubject.value}. Count: ${it.size}") }
@@ -43,7 +47,10 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                     allMoviesCached.addAll(it)
                     allMoviesCached.toList()
                 }
-                .doOnNext { movieItemBox.put(it) }
+                .doOnNext {
+                    preferences.edit().putLong("movie_save_time", DateTime.now().millis).apply()
+                    movieItemBox.put(it)
+                }
                 .subscribe({ movies ->
                     moviesSubject.onNext(movies)
                 }, { error -> Timber.e(error) })
@@ -54,9 +61,15 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
         return moviesSubject
     }
 
-    private fun getMoviesFromBox(page: String): Observable<MutableList<UpcomingMovie>> {
-        val allMovies = movieItemBox.all
-        return if (allMovies.isNotEmpty()) Observable.just(allMovies) else Observable.empty()
+    private fun getMoviesFromBox(): Observable<MutableList<UpcomingMovie>> {
+        val lastSaveTime = LocalDate(preferences.getLong("movie_save_time", Long.MAX_VALUE))
+        val yesterday = LocalDate.now().minusDays(1)
+        return if (lastSaveTime.isBefore(yesterday)) {
+            Observable.empty()
+        } else {
+            val allMovies = movieItemBox.all
+            if (allMovies.isNotEmpty()) Observable.just(allMovies) else Observable.empty()
+        }
     }
 
     private fun getMoviesFromApi(page: String): Observable<List<UpcomingMovie>> =
@@ -77,6 +90,7 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
         for (movie in allMovies) {
             newMovies.remove(movie)
         }
+        preferences.edit().putLong("movie_save_time", DateTime.now().millis).apply()
         movieItemBox.put(newMovies)
     }
 

@@ -1,18 +1,18 @@
-package com.dev.cameronc.moviedb.data
+package com.dev.cameronc.moviedb.data.movie.detail
 import com.google.gson.annotations.SerializedName
 
 data class SimilarMoviesResponse(
         @SerializedName("page")
     val page: Int,
         @SerializedName("results")
-    val results: List<Result>,
+    val results: List<SimilarMovie>,
         @SerializedName("total_pages")
     val totalPages: Int,
         @SerializedName("total_results")
     val totalResults: Int
 )
 
-data class Result(
+data class SimilarMovie(
         @SerializedName("vote_count") val voteCount: Int,
         @SerializedName("id") val id: Long,
         @SerializedName("video") val video: Boolean,

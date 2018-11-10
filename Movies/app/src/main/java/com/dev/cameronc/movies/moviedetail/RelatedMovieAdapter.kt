@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.request.RequestOptions
-import com.dev.cameronc.moviedb.data.Result
+import com.dev.cameronc.moviedb.data.movie.detail.SimilarMovie
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
 import javax.inject.Inject
 
 class RelatedMovieAdapter @Inject constructor(private val movieImageDownloader: MovieImageDownloader) : RecyclerView.Adapter<RelatedMovieViewHolder>() {
-    lateinit var relatedMovies: List<Result>
+    lateinit var relatedMovies: List<SimilarMovie>
     lateinit var relatedMovieClickListener: (movieId: Long) -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RelatedMovieViewHolder =

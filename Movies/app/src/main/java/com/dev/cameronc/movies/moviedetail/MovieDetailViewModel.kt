@@ -1,9 +1,9 @@
 package com.dev.cameronc.movies.moviedetail
 
 import android.arch.lifecycle.ViewModel
-import com.dev.cameronc.moviedb.data.MovieCreditsResponse
-import com.dev.cameronc.moviedb.data.MovieDetailsResponse
-import com.dev.cameronc.moviedb.data.SimilarMoviesResponse
+import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
+import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
+import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
 import com.dev.cameronc.movies.model.MovieRepo
 import com.dev.cameronc.movies.model.movie.MovieReview
 import io.reactivex.Observable

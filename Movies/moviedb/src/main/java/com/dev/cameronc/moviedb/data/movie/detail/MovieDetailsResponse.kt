@@ -1,65 +1,65 @@
-package com.dev.cameronc.moviedb.data
+package com.dev.cameronc.moviedb.data.movie.detail
 
 import com.google.gson.annotations.SerializedName
 
 data class MovieDetailsResponse(
-    @SerializedName("adult")
+        @SerializedName("adult")
     val adult: Boolean,
-    @SerializedName("backdrop_path")
+        @SerializedName("backdrop_path")
     val backdropPath: String,
-    @SerializedName("belongs_to_collection")
+        @SerializedName("belongs_to_collection")
     val belongsToCollection: Any?,
-    @SerializedName("budget")
+        @SerializedName("budget")
     val budget: Int,
-    @SerializedName("genres")
+        @SerializedName("genres")
     val genres: List<Genre>,
-    @SerializedName("homepage")
+        @SerializedName("homepage")
     val homepage: String,
-    @SerializedName("id")
+        @SerializedName("id")
     val id: Int,
-    @SerializedName("imdb_id")
+        @SerializedName("imdb_id")
     val imdbId: String,
-    @SerializedName("original_language")
+        @SerializedName("original_language")
     val originalLanguage: String,
-    @SerializedName("original_title")
+        @SerializedName("original_title")
     val originalTitle: String,
-    @SerializedName("overview")
+        @SerializedName("overview")
     val overview: String,
-    @SerializedName("popularity")
+        @SerializedName("popularity")
     val popularity: Double,
-    @SerializedName("poster_path")
+        @SerializedName("poster_path")
     val posterPath: String,
-    @SerializedName("production_companies")
+        @SerializedName("production_companies")
     val productionCompanies: List<ProductionCompany>,
-    @SerializedName("production_countries")
+        @SerializedName("production_countries")
     val productionCountries: List<ProductionCountry>,
-    @SerializedName("release_date")
+        @SerializedName("release_date")
     val releaseDate: String,
-    @SerializedName("release_dates")
+        @SerializedName("release_dates")
     val releaseDates: ReleaseDates,
-    @SerializedName("revenue")
+        @SerializedName("revenue")
     val revenue: Int,
-    @SerializedName("runtime")
+        @SerializedName("runtime")
     val runtime: Int,
-    @SerializedName("spoken_languages")
+        @SerializedName("spoken_languages")
     val spokenLanguages: List<SpokenLanguage>,
-    @SerializedName("status")
+        @SerializedName("status")
     val status: String,
-    @SerializedName("tagline")
+        @SerializedName("tagline")
     val tagline: String,
-    @SerializedName("title")
+        @SerializedName("title")
     val title: String,
-    @SerializedName("video")
+        @SerializedName("video")
     val video: Boolean,
-    @SerializedName("vote_average")
+        @SerializedName("vote_average")
     val voteAverage: Double,
-    @SerializedName("vote_count")
+        @SerializedName("vote_count")
     val voteCount: Int
 )
 
 data class ReleaseDates(
     @SerializedName("results")
-    val results: List<ReleaseResult>
+    val releases: List<ReleaseResult>
 )
 
 data class ReleaseResult(

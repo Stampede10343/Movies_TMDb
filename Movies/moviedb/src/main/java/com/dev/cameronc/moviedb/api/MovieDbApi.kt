@@ -3,6 +3,8 @@ package com.dev.cameronc.moviedb.api
 import com.dev.cameronc.moviedb.data.*
 import com.dev.cameronc.moviedb.data.actor.ActorCreditsResponse
 import com.dev.cameronc.moviedb.data.actor.ActorDetails
+import com.dev.cameronc.moviedb.data.movie.*
+import com.dev.cameronc.moviedb.data.movie.detail.*
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.GET

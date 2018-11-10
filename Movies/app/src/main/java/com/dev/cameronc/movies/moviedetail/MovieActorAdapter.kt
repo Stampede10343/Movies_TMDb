@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.request.RequestOptions
-import com.dev.cameronc.moviedb.data.Cast
+import com.dev.cameronc.moviedb.data.movie.detail.Cast
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
 import javax.inject.Inject

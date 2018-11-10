@@ -1,4 +1,4 @@
-package com.dev.cameronc.moviedb.data
+package com.dev.cameronc.moviedb.data.movie.detail
 
 import com.google.gson.annotations.SerializedName
 

@@ -7,11 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.dev.cameronc.movies.R
 
-class MovieGenreAdapter(private val genres: MutableList<String>) : RecyclerView.Adapter<MovieGenreAdapter.GenreViewHolder>()
-{
+class MovieGenreAdapter(private val genres: List<String>) : RecyclerView.Adapter<MovieGenreAdapter.GenreViewHolder>() {
 
-    override fun onBindViewHolder(holder: GenreViewHolder, position: Int)
-    {
+    override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
         holder.title.text = genres[position]
     }
 
@@ -20,8 +18,7 @@ class MovieGenreAdapter(private val genres: MutableList<String>) : RecyclerView.
 
     override fun getItemCount(): Int = genres.size
 
-    class GenreViewHolder(view: View) : RecyclerView.ViewHolder(view)
-    {
+    class GenreViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.genre_tag)
     }
 }

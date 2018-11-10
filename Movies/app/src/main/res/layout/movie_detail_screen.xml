@@ -67,7 +67,7 @@
 
                     <TextView
                         android:id="@+id/movie_detail_runtime"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="@string/movie_duration"
@@ -75,6 +75,22 @@
                         android:visibility="invisible"
                         tools:text="139 minutes"
                         tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/movie_detail_rating_average"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        tools:text="8.7" />
+
+                    <ImageView
+                        android:id="@+id/movie_detail_rating_average_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_thumbs_up_down"
+                        android:tint="?android:attr/textColorPrimary" />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
@@ -106,12 +122,10 @@
                     tools:text="This is a description about the Shawshank redemption" />
 
                 <TextView
+                    style="@style/SectionTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cast"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:text="@string/cast" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/movie_detail_actors"
@@ -124,24 +138,25 @@
                     tools:listitem="@layout/actor_grid_item" />
 
                 <TextView
+                    android:id="@+id/movie_detail_review_text"
+                    style="@style/SectionTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/ratings"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:text="@string/reviews" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/movie_detail_ratings"
+                    android:id="@+id/movie_detail_reviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    tools:layoutManager="LinearLayoutManager" />
+                    tools:layoutManager="LinearLayoutManager"
+                    tools:listitem="@layout/movie_review" />
 
                 <TextView
-                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:id="@+id/movie_detail_related_text"
+                    style="@style/SectionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"

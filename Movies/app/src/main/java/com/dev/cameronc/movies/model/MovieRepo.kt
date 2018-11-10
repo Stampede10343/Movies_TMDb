@@ -3,7 +3,13 @@ package com.dev.cameronc.movies.model
 import android.content.SharedPreferences
 import com.dev.cameronc.androidutilities.AnalyticTrackingHelper
 import com.dev.cameronc.moviedb.api.MovieDbApi
-import com.dev.cameronc.moviedb.data.*
+import com.dev.cameronc.moviedb.data.ConfigurationResponse
+import com.dev.cameronc.moviedb.data.MultiSearchResponse
+import com.dev.cameronc.moviedb.data.SearchResponse
+import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
+import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
+import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
+import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
 import com.dev.cameronc.movies.model.movie.MovieMapper
 import com.dev.cameronc.movies.model.movie.MovieReview
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
@@ -98,8 +104,9 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
     override fun getConfiguration(): ObservableSource<out ConfigurationResponse> =
             movieDbApi.getConfiguration()
 
-    override fun searchMovies(query: String): Observable<SearchResponse> = movieDbApi.search(query)
-            .doOnNext { analyticTracker.trackEvent("Search Movies: $query") }
+    override fun searchMovies(query: String): Observable<SearchResponse> =
+            movieDbApi.search(query)
+                    .doOnNext { analyticTracker.trackEvent("Search Movies: $query") }
 
     override fun getMovieDetails(movieId: Long): Observable<MovieDetailsResponse> =
             movieDbApi.movieDetails(movieId).toObservable()

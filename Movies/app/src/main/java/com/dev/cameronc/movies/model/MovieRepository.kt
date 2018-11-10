@@ -1,6 +1,12 @@
 package com.dev.cameronc.movies.model
 
-import com.dev.cameronc.moviedb.data.*
+import com.dev.cameronc.moviedb.data.ConfigurationResponse
+import com.dev.cameronc.moviedb.data.MultiSearchResponse
+import com.dev.cameronc.moviedb.data.SearchResponse
+import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
+import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
+import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
+import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
 import com.dev.cameronc.movies.model.movie.MovieReview
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import io.reactivex.Observable

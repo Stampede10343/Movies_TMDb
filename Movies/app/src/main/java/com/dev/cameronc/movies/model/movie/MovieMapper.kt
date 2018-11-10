@@ -1,7 +1,7 @@
 package com.dev.cameronc.movies.model.movie
 
-import com.dev.cameronc.moviedb.data.MovieResponseItem
-import com.dev.cameronc.moviedb.data.ReviewResult
+import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
+import com.dev.cameronc.moviedb.data.movie.detail.ReviewResult
 import javax.inject.Inject
 
 class MovieMapper @Inject constructor() {
@@ -14,5 +14,5 @@ class MovieMapper @Inject constructor() {
     }
 
     fun mapMovieReviewResponseToMovieReview(responseReview: ReviewResult): MovieReview =
-            MovieReview(responseReview.id, responseReview.author, responseReview.content)
+            MovieReview(responseReview.id, responseReview.author, responseReview.content.trim())
 }

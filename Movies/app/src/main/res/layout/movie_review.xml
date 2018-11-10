@@ -1,25 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
+    app:elevation="8dp">
 
-    <TextView
-        android:id="@+id/review_author"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textSize="18sp"
-        tools:text="Cameron" />
-
-    <TextView
-        android:id="@+id/review_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        tools:text="The Shawshank Redemtion is a great movie. Not only is it a story about two friends, it is a story about how life can throw you some absolute garbage, but you can work through it and come out on the other side clean." />
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/review_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="18sp"
+            tools:text="Cameron" />
+
+        <TextView
+            android:id="@+id/review_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="The Shawshank Redemtion is a great movie. Not only is it a story about two friends, it is a story about how life can throw you some absolute garbage, but you can work through it and come out on the other side clean." />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

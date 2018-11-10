@@ -9,11 +9,9 @@ import android.support.v7.widget.RecyclerView
 import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.View
-import android.widget.Toast
 import com.bumptech.glide.request.RequestOptions
 import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.androidutilities.view.MarginItemDecoration
-import com.dev.cameronc.moviedb.data.ReleaseResult
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
@@ -70,70 +68,69 @@ class MovieDetailScreen : BaseScreen, Bundleable {
 
         setListMargins()
 
-        movieDetailViewModel.getMovieDetails(movieId)
+        movieDetailViewModel.movieDetails(movieId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ detailResponse ->
+                .subscribe({ movieDetails ->
                     TransitionManager.beginDelayedTransition(movie_detail_layout)
-                    if (detailResponse.runtime > 0) {
-                        movie_detail_runtime.text = context.getString(R.string.movie_duration, detailResponse.runtime.toString())
+                    if (movieDetails.runtime > 0) {
+                        movie_detail_runtime.text = context.getString(R.string.movie_duration, movieDetails.runtime.toString())
                         movie_detail_runtime.visibility = View.VISIBLE
                     } else movie_detail_runtime.visibility = View.GONE
 
-                    val usRelease: ReleaseResult? = detailResponse.releaseDates.results.firstOrNull { it.iso31661 == "US" }
-                    if (usRelease != null && usRelease.releaseDates.isNotEmpty() && usRelease.releaseDates.firstOrNull()?.certification?.isNotBlank() == true) {
-                        movie_detail_rating.visibility = View.VISIBLE
-                        movie_detail_rating.text = usRelease.releaseDates[0].certification
-                    }
+                    movie_detail_rating.visibility = movieDetails.ratingVisibility
+                    movie_detail_rating.text = movieDetails.rating
+
+                    movie_detail_rating_average.visibility = movieDetails.voteAverageVisibility
+                    movie_detail_rating_average_image.visibility = movieDetails.voteAverageVisibility
+                    movie_detail_rating_average.text = movieDetails.voteAverage
+
                     movie_detail_genre_list.visibility = View.VISIBLE
                     movie_detail_genre_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    movie_detail_genre_list.adapter = MovieGenreAdapter(detailResponse.genres.asSequence().map { it.name }.toMutableList())
+                    movie_detail_genre_list.adapter = MovieGenreAdapter(movieDetails.genres)
 
-                    imageDownloader.loadBackdrop(detailResponse.backdropPath, movie_detail_poster)
+                    imageDownloader.loadBackdrop(movieDetails.backdropPath, movie_detail_poster)
                             .apply(RequestOptions.centerCropTransform())
                             .apply(RequestOptions().placeholder(R.color.dark_grey))
                             .into(movie_detail_poster)
-                    movie_detail_title.text = detailResponse.title + ' ' + '(' + detailResponse.releaseDate.subSequence(0, 4) + ')'
-                    movie_detail_description.text = detailResponse.overview
-                }, { error ->
-                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG).show()
-                }).disposeBy(this)
+                    movie_detail_title.text = movieDetails.title
+                    movie_detail_description.text = movieDetails.overview
 
-        movieDetailViewModel.getMovieCredits(movieId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ creditsResponse ->
-                    actorAdapter.setActors(creditsResponse.cast)
+                    actorAdapter.setActors(movieDetails.cast)
                     actorAdapter.onActorClicked {
                         Navigator.getBackstack(context).goTo(ActorScreen.ActorScreenKey(it))
                     }
                     movie_detail_actors.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
                     movie_detail_actors.adapter = actorAdapter
-                }, { error ->
-                    Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG).show()
-                }).disposeBy(this)
 
-        movieDetailViewModel.getRelatedMovies(movieId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ relatedResponse ->
-                    movie_detail_related_movies.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
-                    relatedMovieAdapter.relatedMovies = relatedResponse.results
-                    relatedMovieAdapter.relatedMovieClickListener = { Navigator.getBackstack(context).goTo(MovieDetailKey(it)) }
-                    movie_detail_related_movies.adapter = relatedMovieAdapter
+                    if (movieDetails.similarMovies.isEmpty()) {
+                        movie_detail_related_text.visibility = View.GONE
+                        movie_detail_related_movies.visibility = View.GONE
 
-                    postDelayed({
-                        restoreHierarchyState(viewState)
-                    }, 100)
-                }, { error -> Timber.e(error) }).disposeBy(this)
+                    } else {
+                        movie_detail_related_text.visibility = View.VISIBLE
+                        movie_detail_related_movies.visibility = View.VISIBLE
+                        movie_detail_related_movies.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
+                        relatedMovieAdapter.relatedMovies = movieDetails.similarMovies
+                        relatedMovieAdapter.relatedMovieClickListener = { Navigator.getBackstack(context).goTo(MovieDetailKey(it)) }
+                        movie_detail_related_movies.adapter = relatedMovieAdapter
+                    }
 
-        movieDetailViewModel.getMovieReviews(movieId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ reviews ->
-                    movie_detail_ratings.layoutManager = LinearLayoutManager(context)
-                    movie_detail_ratings.adapter = reviewAdapter
-                    reviewAdapter.setReviews(reviews)
+                    if (movieDetails.reviews.isEmpty()) {
+                        movie_detail_review_text.visibility = View.GONE
+                        movie_detail_reviews.visibility = View.GONE
+                    } else {
+                        movie_detail_review_text.visibility = View.VISIBLE
+                        movie_detail_reviews.visibility = View.VISIBLE
+                        movie_detail_reviews.layoutManager = LinearLayoutManager(context)
+                        movie_detail_reviews.adapter = reviewAdapter
+                        reviewAdapter.setReviews(movieDetails.reviews)
+                    }
+
+                    /* postDelayed({
+                         if (viewState != null) restoreHierarchyState(viewState)
+                         viewState = null
+                     }, 2000)*/
                 }, { error -> Timber.e(error) }).disposeBy(this)
 
         if (movie != null) {

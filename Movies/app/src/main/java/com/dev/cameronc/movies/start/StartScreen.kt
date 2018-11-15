@@ -118,6 +118,7 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         if (searchResultsWindow.isShowing) searchResultsWindow.dismiss()
+        keyboardHelper.clearListener()
     }
 
     override fun loadMore() {

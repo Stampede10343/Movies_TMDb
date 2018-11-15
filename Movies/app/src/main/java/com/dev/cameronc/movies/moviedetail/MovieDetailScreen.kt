@@ -176,8 +176,8 @@ class MovieDetailScreen : BaseScreen, Bundleable {
     override fun getScreenName(): String = "Movie Detail"
 
     override fun handleBackPressed(): Boolean {
-        val galleryParent = findViewById<View>(R.id.gallery_viewgroup)
-        return if (galleryParent.visibility == View.VISIBLE) {
+        val galleryParent = findViewById<View?>(R.id.gallery_viewgroup)
+        return if (galleryParent != null && galleryParent.visibility == View.VISIBLE) {
             galleryParent.fadeAndSetGone()
             true
         } else super.handleBackPressed()

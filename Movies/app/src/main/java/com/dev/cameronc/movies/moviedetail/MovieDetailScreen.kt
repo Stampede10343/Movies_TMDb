@@ -3,6 +3,7 @@ package com.dev.cameronc.movies.moviedetail
 import android.content.Context
 import android.graphics.Rect
 import android.os.Parcelable
+import android.support.v4.view.ViewPager
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,6 +13,8 @@ import android.view.View
 import com.bumptech.glide.request.RequestOptions
 import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.androidutilities.view.MarginItemDecoration
+import com.dev.cameronc.androidutilities.view.fadeAndSetGone
+import com.dev.cameronc.androidutilities.view.fadeIn
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
@@ -47,6 +50,8 @@ class MovieDetailScreen : BaseScreen, Bundleable {
     lateinit var relatedMovieAdapter: RelatedMovieAdapter
     @Inject
     lateinit var reviewAdapter: MovieReviewAdapter
+    @Inject
+    lateinit var galleryAdapter: GalleryAdapter
 
     private var movie: UpcomingMovie? = null
     private var previousScrollY: Int = 0
@@ -69,8 +74,6 @@ class MovieDetailScreen : BaseScreen, Bundleable {
         setListMargins()
 
         movieDetailViewModel.movieDetails(movieId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ movieDetails ->
                     TransitionManager.beginDelayedTransition(movie_detail_layout)
                     if (movieDetails.runtime > 0) {
@@ -127,10 +130,27 @@ class MovieDetailScreen : BaseScreen, Bundleable {
                         reviewAdapter.setReviews(movieDetails.reviews)
                     }
 
-                    /* postDelayed({
-                         if (viewState != null) restoreHierarchyState(viewState)
-                         viewState = null
-                     }, 2000)*/
+                    movie_detail_poster.setOnClickListener {
+                        movieDetailViewModel.movieImages(movieId)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({ imageUrls ->
+                                    if (gallery_pager_stub != null) {
+                                        gallery_pager_stub.inflate()
+                                    }
+                                    val pagerParent: View = findViewById(R.id.gallery_viewgroup)
+                                    val viewPager: ViewPager = pagerParent.findViewById(R.id.gallery_pager)
+                                    galleryAdapter.imageUrls.addAll(imageUrls)
+                                    galleryAdapter.imageClickListener = { pagerParent.fadeAndSetGone() }
+                                    viewPager.adapter = galleryAdapter
+                                    viewPager.offscreenPageLimit = 2
+
+                                    pagerParent.fadeIn()
+                                    viewPager.bringToFront()
+                                }, { error -> Timber.e(error) })
+                                .disposeBy(this)
+
+                    }
                 }, { error -> Timber.e(error) }).disposeBy(this)
 
         if (movie != null) {
@@ -154,6 +174,14 @@ class MovieDetailScreen : BaseScreen, Bundleable {
     }
 
     override fun getScreenName(): String = "Movie Detail"
+
+    override fun handleBackPressed(): Boolean {
+        val galleryParent = findViewById<View>(R.id.gallery_viewgroup)
+        return if (galleryParent.visibility == View.VISIBLE) {
+            galleryParent.fadeAndSetGone()
+            true
+        } else super.handleBackPressed()
+    }
 
     override fun toBundle(): StateBundle = super.toBundle().apply { putInt("scrollY", movie_detail_scrollview.scrollY) }
 

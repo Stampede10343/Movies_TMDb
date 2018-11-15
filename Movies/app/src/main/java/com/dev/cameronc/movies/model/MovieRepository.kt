@@ -8,6 +8,7 @@ import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
 import com.dev.cameronc.movies.model.movie.MovieReview
+import com.dev.cameronc.movies.model.movie.MovieVideo
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -22,4 +23,6 @@ interface MovieRepository {
     fun getSimilarMovies(movieId: Long): Observable<SimilarMoviesResponse>
     fun searchAll(query: String): Observable<MultiSearchResponse>
     fun getMovieReviews(movieId: Long): Observable<List<MovieReview>>
+    fun getVideosForMovie(movieId: Long): Observable<List<MovieVideo>>
+    fun getMovieImages(movieId: Long): Observable<List<String>>
 }

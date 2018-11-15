@@ -43,4 +43,6 @@ class MovieDetailViewModel @Inject constructor(private val movieRepo: MovieRepo,
 
     private fun getMovieReviews(movieId: Long): Observable<List<MovieReview>> =
             movieRepo.getMovieReviews(movieId)
+
+    fun movieImages(movieId: Long): Observable<List<String>> = movieRepo.getMovieImages(movieId)
 }

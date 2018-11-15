@@ -76,6 +76,8 @@ dependencies {
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
+
+    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
 }
 
 androidExtensions {

@@ -90,7 +90,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:src="@drawable/ic_thumbs_up_down"
-                        android:tint="?android:attr/textColorPrimary" />
+                        android:tint="?android:attr/textColorPrimary"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
@@ -176,4 +178,11 @@
             </LinearLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <ViewStub
+        android:id="@+id/gallery_pager_stub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/gallery_viewgroup"
+        android:layout="@layout/gallery_view" />
 </com.dev.cameronc.movies.moviedetail.MovieDetailScreen>

@@ -1,9 +1,11 @@
 package com.dev.cameronc.moviedb.api
 
-import com.dev.cameronc.moviedb.data.*
+import com.dev.cameronc.moviedb.data.ConfigurationResponse
+import com.dev.cameronc.moviedb.data.MultiSearchResponse
+import com.dev.cameronc.moviedb.data.SearchResponse
 import com.dev.cameronc.moviedb.data.actor.ActorCreditsResponse
 import com.dev.cameronc.moviedb.data.actor.ActorDetails
-import com.dev.cameronc.moviedb.data.movie.*
+import com.dev.cameronc.moviedb.data.movie.UpcomingMovieResponse
 import com.dev.cameronc.moviedb.data.movie.detail.*
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -46,4 +48,7 @@ interface MovieDbApi {
 
     @GET("movie/{movie_id}/reviews")
     fun movieReview(@Path("movie_id") movieId: Long): Single<MovieReviewResponse>
+
+    @GET("movie/{movie_id}/images")
+    fun imagesForMovie(@Path("movie_id") movieId: Long): Single<MovieImagesResponse>
 }

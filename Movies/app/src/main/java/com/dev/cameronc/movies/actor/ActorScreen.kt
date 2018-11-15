@@ -16,6 +16,7 @@ import com.dev.cameronc.androidutilities.view.MarginItemDecoration
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
+import com.dev.cameronc.movies.model.actor.ActorScreenModel
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
 import com.dev.cameronc.movies.toDp
 import com.zhuinden.simplestack.Backstack
@@ -25,8 +26,6 @@ import com.zhuinden.simplestack.navigator.StateKey
 import com.zhuinden.simplestack.navigator.ViewChangeHandler
 import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
 import com.zhuinden.statebundle.StateBundle
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.actor_screen.view.*
 import timber.log.Timber
@@ -55,51 +54,55 @@ class ActorScreen : BaseScreen, Bundleable {
     override fun viewReady() {
         if (isInEditMode) return
 
+        val tmdbActorId = Backstack.getKey<ActorScreenKey>(context).actorId
+        actorViewModel.getScreenModel(tmdbActorId)
+                .subscribe({ actorDetails ->
+                    TransitionManager.beginDelayedTransition(actor_profile_name.parent as ViewGroup, Fade())
+                    setMainActorInfo(actorDetails)
+                    setActorBirthDetails(actorDetails)
+                    setupRolesList(actorDetails)
+                }, { error -> Timber.e(error) }).disposeBy(this)
+
+    }
+
+    private fun setMainActorInfo(actorDetails: ActorScreenModel) {
+        actor_profile_name.text = actorDetails.name
+        actor_profile_description.text = actorDetails.biography
+        imageDownloader.load(actorDetails.profileImagePath, actor_profile_image)
+                .apply(RequestOptions.centerCropTransform().placeholder(R.drawable.empty_profile))
+                .into(actor_profile_image)
+    }
+
+    private fun setActorBirthDetails(actorDetails: ActorScreenModel) {
+        if (actorDetails.birthday.isNullOrBlank()) {
+            actor_profile_birthdate.visibility = View.GONE
+        } else {
+            actor_profile_birthdate.text = context.getString(R.string.actor_born, dateFormatter.formatDateToLongFormat(actorDetails.birthday))
+            if (actorDetails.deathDay == null) {
+                actor_profile_age.text = dateFormatter.getTimeSpanFromNow(actorDetails.birthday)
+            } else {
+                actor_profile_age.text = dateFormatter.getTimeSpanAtTime(actorDetails.birthday, actorDetails.deathDay)
+            }
+        }
+
+        if (actorDetails.deathDay.isNullOrBlank()) {
+            actor_profile_deathday.visibility = View.GONE
+        } else {
+            actor_profile_deathday.visibility = View.VISIBLE
+            actor_profile_deathday.text = context.getString(R.string.actor_died, dateFormatter.formatDateToLongFormat(actorDetails.deathDay))
+        }
+        actor_profile_place_of_birth.text = actorDetails.placeOfBirth
+    }
+
+    private fun setupRolesList(actorDetails: ActorScreenModel) {
+        val margin = 8.toDp()
+        actor_movie_credits.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
+        actor_movie_credits.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
+        actorRoleAdapter.items = actorDetails.actorRoles
         actorRoleAdapter.movieRoleClickListener = {
             Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it))
         }
-
-        val tmdbActorId = Backstack.getKey<ActorScreenKey>(context).actorId
-        actorViewModel.getActorDetails(tmdbActorId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ actorDetails ->
-                    TransitionManager.beginDelayedTransition(actor_profile_name.parent as ViewGroup, Fade())
-                    actor_profile_name.text = actorDetails.name
-                    if (actorDetails.birthday.isNullOrBlank()) {
-                        actor_profile_birthdate.visibility = View.GONE
-                    } else {
-                        actor_profile_birthdate.text = context.getString(R.string.actor_born, dateFormatter.formatDateToLongFormat(actorDetails.birthday))
-                        if (actorDetails.deathDay == null) {
-                            actor_profile_age.text = dateFormatter.getTimeSpanFromNow(actorDetails.birthday)
-                        } else actor_profile_age.text = dateFormatter.getTimeSpanAtTime(actorDetails.birthday, actorDetails.deathDay)
-                    }
-                    if (actorDetails.deathDay.isNullOrBlank()) {
-                        actor_profile_deathday.visibility = View.GONE
-                    } else {
-                        actor_profile_deathday.visibility = View.VISIBLE
-                        actor_profile_deathday.text = context.getString(R.string.actor_died, dateFormatter.formatDateToLongFormat(actorDetails.deathDay))
-                    }
-
-                    actor_profile_place_of_birth.text = actorDetails.placeOfBirth
-                    actor_profile_description.text = actorDetails.biography
-                    imageDownloader.load(actorDetails.profilePhotoPath, actor_profile_image)
-                            .apply(RequestOptions.centerCropTransform().placeholder(R.drawable.empty_profile))
-                            .into(actor_profile_image)
-                }, { error -> Timber.e(error) }).disposeBy(this)
-
-        actorViewModel.getActorMovieCredits(tmdbActorId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ movieCredits ->
-                    val margin = 8.toDp()
-                    actor_movie_credits.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
-                    actor_movie_credits.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
-                    actorRoleAdapter.items = movieCredits.roles
-                    actor_movie_credits.adapter = actorRoleAdapter
-
-                    postDelayed({ if (viewState != null) restoreHierarchyState(viewState) }, 100)
-                }, { error -> Timber.e(error) }).disposeBy(this)
+        actor_movie_credits.adapter = actorRoleAdapter
     }
 
     override fun getScreenName(): String = "Actor"

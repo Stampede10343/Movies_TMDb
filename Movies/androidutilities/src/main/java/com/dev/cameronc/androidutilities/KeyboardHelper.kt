@@ -43,8 +43,8 @@ class KeyboardHelper @Inject constructor(private val activity: AppCompatActivity
                 keyboardClosed?.invoke()
                 Timber.v("Keyboard closed")
             }
-            activityRootView.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         }
+        activityRootView.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
     }
 
     fun clearListener() {

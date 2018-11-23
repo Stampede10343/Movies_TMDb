@@ -3,7 +3,10 @@ package com.dev.cameronc.movies.di.prod
 import android.content.Context
 import android.net.ConnectivityManager
 import com.dev.cameronc.moviedb.api.MovieDbApi
+import com.dev.cameronc.moviedb.data.movie.detail.video.Site
+import com.dev.cameronc.moviedb.data.movie.detail.video.SiteTransformer
 import com.dev.cameronc.movies.BuildConfig
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -23,15 +26,24 @@ import javax.inject.Singleton
 class NetworkModule {
     @Provides
     @Singleton
-    fun provideMovieApi(httpClient: OkHttpClient): MovieDbApi {
+    fun provideMovieApi(httpClient: OkHttpClient, gsonConverterFactory: GsonConverterFactory): MovieDbApi {
         val api = Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/3/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(gsonConverterFactory)
                 .client(httpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
 
         return api.create(MovieDbApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGsonConverter(): GsonConverterFactory {
+        val gson = GsonBuilder()
+                .registerTypeAdapter(Site::class.java, SiteTransformer())
+                .create()
+        return GsonConverterFactory.create(gson)
     }
 
     @Provides
@@ -49,7 +61,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun httpCache(context: Context): Cache = Cache(File(context.cacheDir, "httpcache"), 30 * 1024 * 1024)
+    fun httpCache(context: Context): Cache = Cache(File(context.cacheDir, "httpcache"), 20 * 1024 * 1024)
 
     @Provides
     fun provideHttpClient(@ApiInterceptor apiInterceptor: Interceptor,
@@ -62,7 +74,8 @@ class NetworkModule {
                 .addInterceptor(loggingInterceptor)
                 .cache(cache)
                 .retryOnConnectionFailure(true)
-                .readTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
                 .build()
     }
 

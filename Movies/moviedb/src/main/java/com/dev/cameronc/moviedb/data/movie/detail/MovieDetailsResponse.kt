@@ -16,7 +16,7 @@ data class MovieDetailsResponse(
         @SerializedName("homepage")
     val homepage: String,
         @SerializedName("id")
-    val id: Int,
+    val id: Long,
         @SerializedName("imdb_id")
     val imdbId: String,
         @SerializedName("original_language")
@@ -38,7 +38,7 @@ data class MovieDetailsResponse(
         @SerializedName("release_dates")
     val releaseDates: ReleaseDates,
         @SerializedName("revenue")
-    val revenue: Int,
+    val revenue: Long,
         @SerializedName("runtime")
     val runtime: Int,
         @SerializedName("spoken_languages")

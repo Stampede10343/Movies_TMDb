@@ -19,6 +19,7 @@ import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
+import com.dev.cameronc.movies.actor.ActorScreen
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
 import com.dev.cameronc.movies.options.OptionsScreen
@@ -78,9 +79,16 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
             viewModel.onSearchEntered("")
 
             keyboardHelper.dismissKeyboard()
+            keyboardHelper.clearListener()
 
             searchResultsWindow.dismiss()
-            Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it))
+
+            when (it.type) {
+                MediaType.Movie -> Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it.id))
+                MediaType.Person -> Navigator.getBackstack(context).goTo(ActorScreen.ActorScreenKey(it.id))
+                MediaType.Television -> Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it.id))
+            }
+
         }
         viewModel.searchResults()
                 .subscribeOn(Schedulers.io())
@@ -119,6 +127,7 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
         super.onDetachedFromWindow()
         if (searchResultsWindow.isShowing) searchResultsWindow.dismiss()
         keyboardHelper.clearListener()
+        viewModel.onDestroy()
     }
 
     override fun loadMore() {

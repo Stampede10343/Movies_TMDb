@@ -115,11 +115,13 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
     override fun searchMovies(query: String): Observable<SearchResponse> =
             movieDbApi.search(query)
                     .doOnNext { analyticTracker.trackEvent("Search Movies: $query") }
+                    .doOnError { Timber.e(it) }
 
     override fun getMovieDetails(movieId: Long): Observable<MovieDetailsResponse> {
         val remoteMovieDetails = movieDbApi.movieDetails(movieId).toObservable()
                 .doOnNext { analyticTracker.trackEvent("Get Movie Details: $movieId") }
                 .doOnNext { movieDetailsCache[movieId] = it }
+                .doOnError { Timber.e(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
@@ -136,6 +138,7 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                 .toObservable()
                 .doOnNext { analyticTracker.trackEvent("Get Movie Credits: $movieId") }
                 .doOnNext { movieCreditsCache[movieId] = it }
+                .doOnError { Timber.e(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
@@ -152,6 +155,7 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                 .toObservable()
                 .doOnNext { analyticTracker.trackEvent("Get SimilarMovies $movieId. Count: ${it.results.size}") }
                 .doOnNext { similarMovieCache[movieId] = it }
+                .doOnError { Timber.e(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
@@ -167,6 +171,7 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
             movieDbApi.searchMulti(query)
                     .toObservable()
                     .doOnNext { analyticTracker.trackEvent("Search: $query. Count: ${it.results.size}") }
+                    .doOnError { Timber.e(it) }
 
     override fun getMovieReviews(movieId: Long): Observable<List<MovieReview>> {
         val remoteReviews = movieDbApi.movieReview(movieId)
@@ -174,6 +179,7 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                 .doOnNext { analyticTracker.trackEvent("Get Movie Reviews: $movieId") }
                 .map { movieResponse -> movieResponse.results.map { movieMapper.mapMovieReviewResponseToMovieReview(it) } }
                 .doOnNext { movieReviewCache[movieId] = it }
+                .doOnError { Timber.e(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
@@ -190,11 +196,13 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
             movieDbApi.videosForMovie(movieId)
                     .toObservable()
                     .doOnNext { analyticTracker.trackEvent("Get Videos for Movie: $movieId. Count: ${it.results.size}") }
+                    .doOnError { Timber.e(it) }
                     .map { videosResponse -> videosResponse.results.map { MovieVideo(it.id, it.site, it.key) } }
 
     override fun getMovieImages(movieId: Long): Observable<List<String>> =
             movieDbApi.imagesForMovie(movieId)
                     .toObservable()
                     .doOnNext { analyticTracker.trackEvent("Get Images for Movie: $movieId") }
+                    .doOnError { Timber.e(it) }
                     .map { imagesResponse -> imagesResponse.backdrops.map { it.filePath } }
 }

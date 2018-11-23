@@ -29,7 +29,7 @@ data class MultiSearchResult(
         @SerializedName("media_type")
         val mediaType: String,
         @SerializedName("name")
-        val name: String,
+        val name: String?,
         @SerializedName("origin_country")
         val originCountry: List<Any>,
         @SerializedName("original_language")
@@ -49,7 +49,7 @@ data class MultiSearchResult(
         @SerializedName("release_date")
         val releaseDate: String,
         @SerializedName("title")
-        val title: String,
+        val title: String?,
         @SerializedName("video")
         val video: Boolean,
         @SerializedName("vote_average")

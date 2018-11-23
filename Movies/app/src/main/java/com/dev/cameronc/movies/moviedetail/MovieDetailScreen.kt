@@ -93,7 +93,7 @@ class MovieDetailScreen : BaseScreen, Bundleable {
                     movie_detail_genre_list.adapter = MovieGenreAdapter(movieDetails.genres)
 
                     imageDownloader.loadBackdrop(movieDetails.backdropPath, movie_detail_poster)
-                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.centerInsideTransform())
                             .apply(RequestOptions().placeholder(R.color.dark_grey))
                             .into(movie_detail_poster)
                     movie_detail_title.text = movieDetails.title
@@ -144,6 +144,9 @@ class MovieDetailScreen : BaseScreen, Bundleable {
                                     galleryAdapter.imageClickListener = { pagerParent.fadeAndSetGone() }
                                     viewPager.adapter = galleryAdapter
                                     viewPager.offscreenPageLimit = 2
+                                    viewPager.setPageTransformer(false) { view, position ->
+                                        view.alpha = Math.max(1 - Math.abs(position), 0.2f)
+                                    }
 
                                     pagerParent.fadeIn()
                                     viewPager.bringToFront()
@@ -162,6 +165,11 @@ class MovieDetailScreen : BaseScreen, Bundleable {
             movie_detail_genre_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             movie_detail_description.text = movie!!.overview
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        movieDetailViewModel.onDestroy()
     }
 
     private fun setListMargins() {

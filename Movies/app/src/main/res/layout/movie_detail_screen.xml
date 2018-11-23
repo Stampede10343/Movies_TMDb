@@ -38,12 +38,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/movie_detail_poster"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp">
 
                 <TextView
                     android:id="@+id/movie_detail_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_bold"
                     android:maxLines="2"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:textSize="24sp"

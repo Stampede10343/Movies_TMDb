@@ -47,6 +47,7 @@ class OptionsScreen : BaseScreen {
                     .setLibrary(Library("RxJava", "https://github.com/ReactiveX/RxJava", License.APACHE))
                     .setLibrary(Library("joda-time-android", "https://github.com/dlew/joda-time-android", License.APACHE))
                     .setLibrary(Library("Simple Stack", "https://github.com/Zhuinden/simple-stack", License.APACHE))
+                    .setLibrary(Library("PhotoView", "https://github.com/chrisbanes/PhotoView", License.APACHE))
                     .show()
         }
     }

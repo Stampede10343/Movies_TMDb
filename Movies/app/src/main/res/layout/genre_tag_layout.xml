@@ -14,9 +14,10 @@
         android:id="@+id/genre_tag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fontFamily="serif"
+        android:fontFamily="@font/open_sans"
         android:padding="2dp"
         android:textColor="@android:color/white"
+        android:textStyle="bold"
         tools:text="Horror" />
 
 </LinearLayout>

@@ -25,7 +25,6 @@ import com.zhuinden.simplestack.navigator.Navigator
 import com.zhuinden.simplestack.navigator.StateKey
 import com.zhuinden.simplestack.navigator.ViewChangeHandler
 import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
-import com.zhuinden.statebundle.StateBundle
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.actor_screen.view.*
 import timber.log.Timber
@@ -40,9 +39,9 @@ class ActorScreen : BaseScreen, Bundleable {
     @Inject
     lateinit var actorRoleAdapter: ActorMovieRoleAdapter
     @Inject
+    lateinit var actorTvRoleAdapter: ActorTvRoleAdapter
+    @Inject
     lateinit var actorViewModel: ActorViewModel
-
-    private var previousScrollPosition: Int = 0
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
@@ -60,7 +59,8 @@ class ActorScreen : BaseScreen, Bundleable {
                     TransitionManager.beginDelayedTransition(actor_profile_name.parent as ViewGroup, Fade())
                     setMainActorInfo(actorDetails)
                     setActorBirthDetails(actorDetails)
-                    setupRolesList(actorDetails)
+                    setupMovieRolesList(actorDetails)
+                    setupTvRolesList(actorDetails)
                 }, { error -> Timber.e(error) }).disposeBy(this)
 
     }
@@ -94,7 +94,7 @@ class ActorScreen : BaseScreen, Bundleable {
         actor_profile_place_of_birth.text = actorDetails.placeOfBirth
     }
 
-    private fun setupRolesList(actorDetails: ActorScreenModel) {
+    private fun setupMovieRolesList(actorDetails: ActorScreenModel) {
         val margin = 8.toDp()
         actor_movie_credits.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
         actor_movie_credits.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
@@ -105,13 +105,20 @@ class ActorScreen : BaseScreen, Bundleable {
         actor_movie_credits.adapter = actorRoleAdapter
     }
 
-    override fun getScreenName(): String = "Actor"
-
-    override fun toBundle(): StateBundle = StateBundle().apply { putInt("scrollY", actor_scrollview.scrollY) }
-
-    override fun fromBundle(bundle: StateBundle?) {
-        bundle?.apply { previousScrollPosition = getInt("scrollY", 0) }
+    private fun setupTvRolesList(actorDetails: ActorScreenModel) {
+        val margin = 8.toDp()
+        actor_tv_credits.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
+        actor_tv_credits.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
+        actorTvRoleAdapter.items = actorDetails.tvRoles
+        actor_tv_credits.adapter = actorTvRoleAdapter
     }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        actorViewModel.onDestroy()
+    }
+
+    override fun getScreenName(): String = "Actor"
 
     @Parcelize
     data class ActorScreenKey(val actorId: Long) : StateKey, Parcelable {

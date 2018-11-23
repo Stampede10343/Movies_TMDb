@@ -7,8 +7,11 @@ import com.dev.cameronc.moviedb.data.actor.ActorCreditsResponse
 import com.dev.cameronc.moviedb.data.actor.ActorDetails
 import com.dev.cameronc.moviedb.data.movie.UpcomingMovieResponse
 import com.dev.cameronc.moviedb.data.movie.detail.*
+import com.dev.cameronc.moviedb.data.movie.detail.video.MovieVideosResponse
+import com.dev.cameronc.moviedb.data.tv.ActorTvCredits
 import io.reactivex.Observable
 import io.reactivex.Single
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -49,6 +52,12 @@ interface MovieDbApi {
     @GET("movie/{movie_id}/reviews")
     fun movieReview(@Path("movie_id") movieId: Long): Single<MovieReviewResponse>
 
+    @GET("movie/{movie_id}/videos")
+    fun videosForMovie(@Path("movie_id") movieId: Long): Single<MovieVideosResponse>
+
     @GET("movie/{movie_id}/images")
     fun imagesForMovie(@Path("movie_id") movieId: Long): Single<MovieImagesResponse>
+
+    @GET("person/{person_id}/tv_credits")
+    fun actorTvCredits(@Path("person_id") personId: Long): Single<Response<ActorTvCredits>>
 }

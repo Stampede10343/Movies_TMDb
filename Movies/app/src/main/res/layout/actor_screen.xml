@@ -57,10 +57,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
+                android:fontFamily="@font/opensans_bold"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/actor_profile_image"
                 app:layout_constraintTop_toTopOf="@+id/actor_profile_image"
                 tools:text="Phillip Seymour Hoffman" />
@@ -134,13 +135,43 @@
                 android:id="@+id/actor_movie_credits"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toTopOf="@id/actor_tv_credits_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/actor_credits_text"
+                tools:layoutManager="GridLayoutManager"
+                tools:listitem="@layout/related_movie_item"
+                tools:orientation="horizontal">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/actor_tv_credits_text"
+                style="@style/SectionTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/television_credits"
+                app:layout_constraintBottom_toTopOf="@+id/actor_tv_credits"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/actor_movie_credits" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/actor_tv_credits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/actor_credits_text"
+                app:layout_constraintTop_toBottomOf="@+id/actor_movie_credits"
                 app:layout_constraintVertical_bias="0.0"
                 tools:layoutManager="GridLayoutManager"
                 tools:listitem="@layout/related_movie_item"

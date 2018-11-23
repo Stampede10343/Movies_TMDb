@@ -1,11 +1,11 @@
 package com.dev.cameronc.movies.moviedetail
 
-import android.arch.lifecycle.ViewModel
 import android.view.View
 import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieRatingFinder
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
+import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.MovieRepo
 import com.dev.cameronc.movies.model.movie.MovieDetails
 import com.dev.cameronc.movies.model.movie.MovieReview

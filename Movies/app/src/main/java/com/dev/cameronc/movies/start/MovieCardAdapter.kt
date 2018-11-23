@@ -1,6 +1,5 @@
 package com.dev.cameronc.movies.start
 
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.request.RequestOptions.centerCropTransform
+import com.dev.cameronc.androidutilities.RecyclerViewDiffCalculator
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
@@ -47,15 +47,10 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
         })
     }
 
-    override fun getItemId(position: Int): Long = results[position].tmdbId
+    override fun getItemId(position: Int): Long = results[position].id
 
     fun addMovies(movies: List<UpcomingMovie>) {
-        val update = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = results[oldItemPosition].tmdbId == movies[newItemPosition].tmdbId
-            override fun getOldListSize(): Int = results.size
-            override fun getNewListSize(): Int = movies.size
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = results[oldItemPosition].posterPath == movies[newItemPosition].posterPath
-        })
+        val update = RecyclerViewDiffCalculator<UpcomingMovie>().calculateDiff(results, movies)
         results.clear()
         results.addAll(movies)
         update.dispatchUpdatesTo(this)
@@ -70,7 +65,7 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
             imageDownloader.load(movie.posterPath, moviePoster)
                     .apply(centerCropTransform().placeholder(android.R.drawable.progress_horizontal))
                     .into(moviePoster)
-            itemView.setOnClickListener { listener.onItemClicked(movie.tmdbId) }
+            itemView.setOnClickListener { listener.onItemClicked(movie.id) }
         }
 
     }

@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.search
 
-import android.arch.lifecycle.ViewModel
+import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.MovieRepo
 import com.dev.cameronc.movies.model.MultiSearchResult
 import io.reactivex.Observable
@@ -42,4 +42,9 @@ class SearchResultsViewModel @Inject constructor(private val movieRepo: MovieRep
     }
 
     fun results(): Observable<List<MultiSearchResult>> = resultsSubject
+
+    override fun onDestroy() {
+        super.onDestroy()
+        subscriptions.clear()
+    }
 }

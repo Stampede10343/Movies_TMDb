@@ -1,6 +1,5 @@
 package com.dev.cameronc.movies.start
 
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.request.RequestOptions
+import com.dev.cameronc.androidutilities.RecyclerViewDiffCalculator
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
 import javax.inject.Inject
 
 class SearchResultAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
 
-    lateinit var resultClickListener: (movieId: Long) -> Unit
+    lateinit var resultClickListener: (searchResult: SearchResult) -> Unit
 
     private val searchResults: MutableList<SearchResult> = emptyList<SearchResult>().toMutableList()
 
@@ -31,19 +31,13 @@ class SearchResultAdapter @Inject constructor(private val imageDownloader: Movie
                 .into(viewHolder.thumbnail)
         viewHolder.text.text = item.title
 
-        viewHolder.itemView.setOnClickListener { resultClickListener.invoke(item.id) }
+        viewHolder.itemView.setOnClickListener { resultClickListener.invoke(item) }
     }
 
     override fun getItemCount(): Int = searchResults.size
 
     fun setSearchResults(results: List<SearchResult>) {
-        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean = searchResults[oldPosition].id == results[newPosition].id
-            override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean = searchResults[oldPosition] == results[newPosition]
-            override fun getOldListSize(): Int = searchResults.size
-            override fun getNewListSize(): Int = results.size
-        }, true)
-
+        val diff = RecyclerViewDiffCalculator<SearchResult>().calculateDiff(searchResults, results)
         searchResults.clear()
         searchResults.addAll(results)
         diff.dispatchUpdatesTo(this)

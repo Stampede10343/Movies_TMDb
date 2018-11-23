@@ -1,9 +1,9 @@
 package com.dev.cameronc.movies.start
 
-import android.arch.lifecycle.ViewModel
 import android.content.SharedPreferences
 import com.dev.cameronc.moviedb.data.ConfigurationResponse
 import com.dev.cameronc.moviedb.data.SearchResponse
+import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.MovieRepository
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import com.google.gson.Gson
@@ -42,9 +42,15 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
         subscriptions.add(searchQuerySubject
                 .debounce(250, TimeUnit.MILLISECONDS)
                 .filter { it.isNotEmpty() }
-                .flatMap { movieRepository.searchMovies(it).subscribeOn(Schedulers.io()) }
+                .flatMap { movieRepository.searchAll(it).subscribeOn(Schedulers.io()) }
                 .map { searchResponse -> searchResponse.results.sortedByDescending { it.popularity } }
-                .map { sortedResults -> sortedResults.map { SearchResult(it.id, it.posterPath, it.title) } }
+                .map { sortedResults ->
+                    sortedResults.map {
+                        val type = if (it.mediaType == "movie") MediaType.Movie else if (it.mediaType == "tv") MediaType.Television else MediaType.Person
+                        val imagePath = if (it.posterPath.isNullOrBlank()) it.profilePath else it.posterPath
+                        SearchResult(it.id, imagePath, if (it.title.isNullOrBlank()) it.name!! else it.title!!, type)
+                    }
+                }
                 .subscribe({ results ->
                     searchResults.onNext(results)
                 }, { error -> Timber.e(error) }))
@@ -87,8 +93,8 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
         return movieRepository.searchMovies(query)
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    override fun onDestroy() {
+        super.onDestroy()
         subscriptions.dispose()
     }
 

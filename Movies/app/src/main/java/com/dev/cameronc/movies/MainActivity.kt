@@ -18,16 +18,16 @@ class MainActivity : BaseActivity() {
     lateinit var keyboardHelper: KeyboardHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        super.onCreate(savedInstanceState)
         MoviesApp.activityComponent = getAppComponent().plusActivity().activity(this).build()
         MoviesApp.activityComponent.inject(this)
         themeManager.setTheme()
-
-        super.onCreate(savedInstanceState)
         Navigator.install(this, findViewById(android.R.id.content), History.single(StartScreen.StartKey()))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         keyboardHelper.clearListener()
     }
 

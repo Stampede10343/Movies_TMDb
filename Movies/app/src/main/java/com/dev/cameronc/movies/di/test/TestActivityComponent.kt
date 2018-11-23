@@ -3,11 +3,12 @@ package com.dev.cameronc.movies.di.test
 import android.support.v7.app.AppCompatActivity
 import com.dev.cameronc.movies.di.ActivityScope
 import com.dev.cameronc.movies.di.prod.ActivityComponent
+import com.dev.cameronc.movies.di.prod.ActivityModule
 import dagger.BindsInstance
 import dagger.Subcomponent
 
 @ActivityScope
-@Subcomponent
+@Subcomponent(modules = [ActivityModule::class])
 interface TestActivityComponent : ActivityComponent {
 
     @Subcomponent.Builder

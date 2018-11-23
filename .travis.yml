@@ -1,3 +1,4 @@
 language: java
 install:
+  - chmod +x build.sh
   - ./build.sh

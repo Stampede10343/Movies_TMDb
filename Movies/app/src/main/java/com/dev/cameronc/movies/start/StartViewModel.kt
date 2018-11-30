@@ -8,7 +8,6 @@ import com.dev.cameronc.movies.model.MovieRepository
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import com.google.gson.Gson
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -29,11 +28,8 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .flatMap { currentPage ->
-                    movieRepository.getUpcomingMovies(currentPage.toString())
-                            .map { it.toMutableList() }
+                    movieRepository.getUpcomingMovies(currentPage.toString()).map { it.toMutableList() }
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .takeUntil { currentPageSubject.value == 10 }
                 .subscribe({ movies ->
                     upcomingMoviesSubject.onNext(movies)
@@ -89,9 +85,7 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
         }
     }
 
-    fun onSearchEntered(query: String): Observable<SearchResponse> {
-        return movieRepository.searchMovies(query)
-    }
+    fun onSearchEntered(query: String): Observable<SearchResponse> = movieRepository.searchMovies(query)
 
     override fun onDestroy() {
         super.onDestroy()

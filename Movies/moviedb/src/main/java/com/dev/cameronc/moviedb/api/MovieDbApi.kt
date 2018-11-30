@@ -21,7 +21,7 @@ interface MovieDbApi {
     fun getConfiguration(): Observable<ConfigurationResponse>
 
     @GET("movie/upcoming")
-    fun getUpcomingMovies(@Query("page") page: String): Observable<UpcomingMovieResponse>
+    fun getUpcomingMovies(@Query("page") page: String, @Query("language") language: String = "en-US"): Observable<UpcomingMovieResponse>
 
     @GET("genre/movie/list")
     fun getGenres(): Observable<GenreResponse>

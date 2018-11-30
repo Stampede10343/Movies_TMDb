@@ -51,14 +51,15 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                     val remoteMovies = getMoviesFromApi(page)
                     val localMovies = getMoviesFromBox()
                     Observable.concat<List<UpcomingMovie>>(localMovies, remoteMovies)
-                            .firstElement()
-                            .toObservable()
+                }
+                .scan { previousMovies, newMovies ->
+                    val allMovies = emptySet<UpcomingMovie>().toMutableSet()
+                    allMovies.addAll(previousMovies)
+                    allMovies.addAll(newMovies)
+
+                    allMovies.sortedByDescending { it.popularity }.toList()
                 }
                 .doOnNext { analyticTracker.trackEvent("Movies loaded. Page: ${getMoviesSubject.value}. Count: ${it.size}") }
-                .doOnNext {
-                    preferences.edit().putLong("movie_save_time", DateTime.now().millis).apply()
-                    movieItemBox.put(it)
-                }
                 .subscribe({ movies ->
                     moviesSubject.onNext(movies)
                 }, { error -> Timber.e(error) })
@@ -85,13 +86,12 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                     .subscribeOn(Schedulers.io())
                     .map { it.results }
                     .map { movies ->
+                        movies.sortByDescending { it.popularity }
                         movies.map { movieResponseItem -> movieMapper.mapMovieResponseToUpcomingMovie(movieResponseItem) }
                     }
-                    .map {
-                        val allMoviesCached = moviesSubject.value?.toMutableSet()
-                                ?: emptySet<UpcomingMovie>().toMutableSet()
-                        allMoviesCached.addAll(it)
-                        allMoviesCached.toList()
+                    .doOnNext {
+                        preferences.edit().putLong("movie_save_time", DateTime.now().millis).apply()
+                        movieItemBox.put(it)
                     }
                     .observeOn(AndroidSchedulers.mainThread())
 

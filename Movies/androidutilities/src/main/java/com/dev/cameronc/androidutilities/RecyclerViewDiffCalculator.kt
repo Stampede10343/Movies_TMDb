@@ -14,7 +14,7 @@ class RecyclerViewDiffCalculator<T : Identifiable> : DiffUtil.Callback() {
     }
 
     override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean = oldList[oldPosition].id == newList[newPosition].id
-    override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean = oldList[oldPosition].id == newList[newPosition].id
+    override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean = oldList[oldPosition] == newList[newPosition]
     override fun getOldListSize(): Int = oldList.size
     override fun getNewListSize(): Int = newList.size
 }

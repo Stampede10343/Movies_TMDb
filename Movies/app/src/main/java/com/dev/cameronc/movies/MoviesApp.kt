@@ -1,6 +1,5 @@
 package com.dev.cameronc.movies
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -11,7 +10,6 @@ import com.dev.cameronc.movies.di.prod.AppComponent
 import com.dev.cameronc.movies.di.prod.AppModule
 import com.dev.cameronc.movies.di.prod.DaggerAppComponent
 import com.dev.cameronc.movies.di.test.DaggerTestAppComponent
-import com.dev.cameronc.movies.di.test.TestAppComponent
 import com.squareup.leakcanary.LeakCanary
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
@@ -48,8 +46,7 @@ class MoviesApp : Application() {
                     .app(this)
                     .appModule(AppModule(this))
                     .build()
-        }
-        else {
+        } else {
             Timber.d("Application component installed")
             DaggerAppComponent.builder()
                     .app(this)

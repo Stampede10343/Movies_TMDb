@@ -17,4 +17,5 @@ interface AppComponent {
     }
 
     fun plusActivity(): ActivityComponent.Builder
+    fun inject(moviesApp: MoviesApp)
 }

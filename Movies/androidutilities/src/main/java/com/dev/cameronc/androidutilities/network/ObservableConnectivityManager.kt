@@ -20,4 +20,11 @@ class ObservableConnectivityManager @Inject constructor(private val connectivity
     }
 
     fun connectivityAvailable(): Observable<Boolean> = connectivitySubject.debounce(2, TimeUnit.SECONDS).filter { it }
+
+    fun connectivityChanged(): Observable<Boolean> = connectivitySubject
+            .debounce(1, TimeUnit.SECONDS)
+            .flatMap { isConnected ->
+                if (isConnected) Observable.just(isConnected).delay(2, TimeUnit.SECONDS) else Observable.just(isConnected)
+            }
+
 }

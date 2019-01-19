@@ -1,6 +1,5 @@
 package com.dev.cameronc.moviedb.api
 
-import com.dev.cameronc.moviedb.data.ConfigurationResponse
 import com.dev.cameronc.moviedb.data.MultiSearchResponse
 import com.dev.cameronc.moviedb.data.SearchResponse
 import com.dev.cameronc.moviedb.data.actor.ActorCreditsResponse
@@ -18,9 +17,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieDbApi {
-    @GET("configuration")
-    fun getConfiguration(): Observable<ConfigurationResponse>
-
     @GET("movie/upcoming")
     fun getUpcomingMovies(@Query("page") page: String, @Query("language") language: String = "en-US"): Observable<UpcomingMovieResponse>
 

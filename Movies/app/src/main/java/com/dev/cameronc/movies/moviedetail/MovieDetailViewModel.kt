@@ -1,6 +1,7 @@
 package com.dev.cameronc.movies.moviedetail
 
 import android.view.View
+import com.dev.cameronc.androidutilities.SnackBarHelper
 import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieRatingFinder

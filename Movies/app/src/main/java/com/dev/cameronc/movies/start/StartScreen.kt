@@ -24,6 +24,7 @@ import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
 import com.dev.cameronc.movies.options.OptionsScreen
 import com.dev.cameronc.movies.search.SearchResultsScreen
+import com.dev.cameronc.movies.tv.TvSeriesScreen
 import com.zhuinden.simplestack.Bundleable
 import com.zhuinden.simplestack.navigator.Navigator
 import com.zhuinden.simplestack.navigator.StateKey
@@ -86,7 +87,7 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
             when (it.type) {
                 MediaType.Movie -> Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it.id))
                 MediaType.Person -> Navigator.getBackstack(context).goTo(ActorScreen.ActorScreenKey(it.id))
-                MediaType.Television -> Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it.id))
+                MediaType.Television -> Navigator.getBackstack(context).goTo(TvSeriesScreen.Key(it.id))
             }
 
         }

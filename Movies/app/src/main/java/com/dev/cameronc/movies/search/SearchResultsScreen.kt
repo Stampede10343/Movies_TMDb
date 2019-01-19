@@ -13,6 +13,7 @@ import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
+import com.dev.cameronc.movies.tv.TvSeriesScreen
 import com.zhuinden.simplestack.Backstack
 import com.zhuinden.simplestack.navigator.Navigator
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -53,7 +54,7 @@ class SearchResultsScreen : BaseScreen, SearchView.OnQueryTextListener {
         })
 
         adapter.movieClickListener = { Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it)) }
-        adapter.tvClickListener = { }
+        adapter.tvClickListener = { Navigator.getBackstack(context).goTo(TvSeriesScreen.Key(it)) }
 
         viewModel.results()
                 .observeOn(AndroidSchedulers.mainThread())

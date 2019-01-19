@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.dev.cameronc.movies.tv.TvSeriesScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tv_series_toolbar"
+                style="@style/Toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="TV Series" />
+
+            <ImageView
+                android:id="@+id/tv_series_backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1.8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_series_toolbar"
+                tools:scaleType="centerCrop"
+                tools:src="@drawable/were_the_millers" />
+
+            <TextView
+                android:id="@+id/tv_series_title"
+                style="@style/DetailItemTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_series_backdrop"
+                tools:text="The Simpsons (1990–2019)" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/tv_series_genres"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal"
+                app:layoutManager="android.support.v7.widget.GridLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_series_title"
+                tools:listitem="@layout/genre_tag_layout" />
+
+            <TextView
+                android:id="@+id/tv_series_seasons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_series_genres"
+                tools:text="29 seasons" />
+
+            <TextView
+                android:id="@+id/tv_series_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_series_seasons"
+                tools:text="The Simpsons is one of the oldest running tv series of all time. It is about a family of people and stuff." />
+
+            <TextView
+                android:id="@+id/tv_series_seasons_title"
+                style="@style/SectionTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/seasons"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_series_description" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/tv_series_seasons_posters"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal"
+                app:layoutManager="android.support.v7.widget.GridLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_series_seasons_title"
+                tools:listitem="@layout/tv_series_season_item" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</com.dev.cameronc.movies.tv.TvSeriesScreen>

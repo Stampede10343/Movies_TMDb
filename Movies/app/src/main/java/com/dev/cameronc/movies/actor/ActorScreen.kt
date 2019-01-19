@@ -19,6 +19,7 @@ import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.model.actor.ActorScreenModel
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
 import com.dev.cameronc.movies.toDp
+import com.dev.cameronc.movies.tv.TvSeriesScreen
 import com.zhuinden.simplestack.Backstack
 import com.zhuinden.simplestack.Bundleable
 import com.zhuinden.simplestack.navigator.Navigator
@@ -111,6 +112,10 @@ class ActorScreen : BaseScreen, Bundleable {
         actor_tv_credits.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
         actorTvRoleAdapter.items = actorDetails.tvRoles
         actor_tv_credits.adapter = actorTvRoleAdapter
+        actorTvRoleAdapter.tvRoleClickListener = {
+            Navigator.getBackstack(context)
+                    .goTo(TvSeriesScreen.Key(it))
+        }
     }
 
     override fun onDetachedFromWindow() {

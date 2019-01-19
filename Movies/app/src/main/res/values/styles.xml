@@ -26,6 +26,8 @@
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="navigationIcon">?attr/homeAsUpIndicator</item>
 
         <item name="colorControlNormal">@color/white</item>
@@ -47,5 +49,11 @@
     <style name="SectionTitle" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DetailItemTitle">
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:textSize">24sp</item>
     </style>
 </resources>

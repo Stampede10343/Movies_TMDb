@@ -9,6 +9,7 @@ import com.dev.cameronc.moviedb.data.movie.UpcomingMovieResponse
 import com.dev.cameronc.moviedb.data.movie.detail.*
 import com.dev.cameronc.moviedb.data.movie.detail.video.MovieVideosResponse
 import com.dev.cameronc.moviedb.data.tv.ActorTvCredits
+import com.dev.cameronc.moviedb.data.tv.TvSeriesDetails
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.Response
@@ -60,4 +61,7 @@ interface MovieDbApi {
 
     @GET("person/{person_id}/tv_credits")
     fun actorTvCredits(@Path("person_id") personId: Long): Single<Response<ActorTvCredits>>
+
+    @GET("tv/{tv_id}")
+    fun tvSeriesDetails(@Path("tv_id") seriesId: Long): Observable<TvSeriesDetails>
 }

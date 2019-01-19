@@ -9,6 +9,7 @@ import com.dev.cameronc.movies.options.OptionsScreen
 import com.dev.cameronc.movies.options.ThemePickerFragment
 import com.dev.cameronc.movies.search.SearchResultsScreen
 import com.dev.cameronc.movies.start.StartScreen
+import com.dev.cameronc.movies.tv.TvSeriesScreen
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -22,6 +23,7 @@ interface ActivityComponent {
     fun inject(searchResultsScreen: SearchResultsScreen)
     fun inject(optionsScreen: OptionsScreen)
     fun inject(themePickerFragment: ThemePickerFragment)
+    fun inject(tvSeriesScreen: TvSeriesScreen)
 
     @Subcomponent.Builder
     interface Builder {

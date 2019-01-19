@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="192dp"
+    android:background="@color/dark_grey"
+    tools:layout_marginEnd="8dp">
+
+    <ImageView
+        android:id="@+id/series_item_poster"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="1dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@id/series_item_text"
+        app:layout_constraintDimensionRatio="5:7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/were_the_millers" />
+
+    <TextView
+        android:id="@+id/series_item_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:paddingEnd="4dp"
+        android:paddingStart="8dp"
+        android:paddingTop="2dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/series_item_poster"
+        tools:text="Season 2" />
+
+</android.support.constraint.ConstraintLayout>

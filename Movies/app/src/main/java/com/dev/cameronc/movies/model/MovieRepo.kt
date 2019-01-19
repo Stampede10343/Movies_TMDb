@@ -2,14 +2,13 @@ package com.dev.cameronc.movies.model
 
 import android.content.SharedPreferences
 import com.dev.cameronc.androidutilities.AnalyticTrackingHelper
-import com.dev.cameronc.moviedb.api.MovieDbApi
-import com.dev.cameronc.moviedb.data.ConfigurationResponse
 import com.dev.cameronc.moviedb.data.MultiSearchResponse
 import com.dev.cameronc.moviedb.data.SearchResponse
 import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
 import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
+import com.dev.cameronc.movies.di.Network
 import com.dev.cameronc.movies.model.movie.MovieMapper
 import com.dev.cameronc.movies.model.movie.MovieReview
 import com.dev.cameronc.movies.model.movie.MovieVideo
@@ -17,10 +16,7 @@ import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -29,7 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
+class MovieRepo @Inject constructor(@Network private val networkDataSource: MovieDataSource,
                                     boxStore: BoxStore,
                                     private val movieMapper: MovieMapper,
                                     private val analyticTracker: AnalyticTrackingHelper,
@@ -57,18 +53,17 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
                     allMovies.addAll(previousMovies)
                     allMovies.addAll(newMovies)
 
-                    allMovies.sortedByDescending { it.popularity }.toList()
+                    allMovies.toList()
                 }
+                .map { it.sortedByDescending { movies -> movies.popularity } }
                 .doOnNext { analyticTracker.trackEvent("Movies loaded. Page: ${getMoviesSubject.value}. Count: ${it.size}") }
                 .subscribe({ movies ->
                     moviesSubject.onNext(movies)
                 }, { error -> Timber.e(error) })
     }
 
-    override fun getUpcomingMovies(page: String): Observable<List<UpcomingMovie>> {
-        getMoviesSubject.onNext(page)
-        return moviesSubject
-    }
+    private fun getMoviesFromApi(page: String): Observable<List<UpcomingMovie>> =
+            networkDataSource.getUpcomingMovies(page)
 
     private fun getMoviesFromBox(): Observable<MutableList<UpcomingMovie>> {
         val lastSaveTime = LocalDate(preferences.getLong("movie_save_time", Long.MAX_VALUE))
@@ -76,24 +71,15 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
         return if (lastSaveTime.isBefore(yesterday)) {
             Observable.empty()
         } else {
-            val allMovies = movieItemBox.all
+            val allMovies = movieItemBox.all//.sortedByDescending { it.popularity }.toMutableList()
             if (allMovies.isNotEmpty()) Observable.just(allMovies) else Observable.empty()
         }
     }
 
-    private fun getMoviesFromApi(page: String): Observable<List<UpcomingMovie>> =
-            movieDbApi.getUpcomingMovies(page)
-                    .subscribeOn(Schedulers.io())
-                    .map { it.results }
-                    .map { movies ->
-                        movies.sortByDescending { it.popularity }
-                        movies.map { movieResponseItem -> movieMapper.mapMovieResponseToUpcomingMovie(movieResponseItem) }
-                    }
-                    .doOnNext {
-                        preferences.edit().putLong("movie_save_time", DateTime.now().millis).apply()
-                        movieItemBox.put(it)
-                    }
-                    .observeOn(AndroidSchedulers.mainThread())
+    override fun getUpcomingMovies(page: String): Observable<List<UpcomingMovie>> {
+        getMoviesSubject.onNext(page)
+        return moviesSubject
+    }
 
     override fun saveMovies(movies: List<MovieResponseItem>) {
         val allMovies = movieItemBox.all
@@ -109,21 +95,12 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
         movieItemBox.put(newMovies)
     }
 
-    override fun getConfiguration(): ObservableSource<out ConfigurationResponse> =
-            movieDbApi.getConfiguration()
-
     override fun searchMovies(query: String): Observable<SearchResponse> =
-            movieDbApi.search(query)
-                    .doOnNext { analyticTracker.trackEvent("Search Movies: $query") }
-                    .doOnError { Timber.e(it) }
+            networkDataSource.searchMovies(query)
 
     override fun getMovieDetails(movieId: Long): Observable<MovieDetailsResponse> {
-        val remoteMovieDetails = movieDbApi.movieDetails(movieId).toObservable()
-                .doOnNext { analyticTracker.trackEvent("Get Movie Details: $movieId") }
+        val remoteMovieDetails = networkDataSource.getMovieDetails(movieId)
                 .doOnNext { movieDetailsCache[movieId] = it }
-                .doOnError { Timber.e(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
 
         val cachedDetails = movieDetailsCache[movieId]
         val cachedDetailsObservable = if (cachedDetails == null) Observable.empty<MovieDetailsResponse>() else Observable.just(cachedDetails)
@@ -131,16 +108,12 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
         return Observable.concat(cachedDetailsObservable, remoteMovieDetails)
                 .firstElement()
                 .toObservable()
+
     }
 
     override fun getMovieCredits(movieId: Long): Observable<MovieCreditsResponse> {
-        val remoteCredits = movieDbApi.movieCredits(movieId)
-                .toObservable()
-                .doOnNext { analyticTracker.trackEvent("Get Movie Credits: $movieId") }
+        val remoteCredits = networkDataSource.getMovieCredits(movieId)
                 .doOnNext { movieCreditsCache[movieId] = it }
-                .doOnError { Timber.e(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
 
         val cachedCredits = movieCreditsCache[movieId]
         val cacheCreditsObservable = if (cachedCredits == null) Observable.empty<MovieCreditsResponse>() else Observable.just(cachedCredits)
@@ -151,13 +124,8 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
     }
 
     override fun getSimilarMovies(movieId: Long): Observable<SimilarMoviesResponse> {
-        val remoteSimilarMovies = movieDbApi.similarMovies(movieId)
-                .toObservable()
-                .doOnNext { analyticTracker.trackEvent("Get SimilarMovies $movieId. Count: ${it.results.size}") }
+        val remoteSimilarMovies = networkDataSource.getSimilarMovies(movieId)
                 .doOnNext { similarMovieCache[movieId] = it }
-                .doOnError { Timber.e(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
 
         val cachedSimilarMovies = similarMovieCache[movieId]
         val cachedSimilarMoviesObservable = if (cachedSimilarMovies == null) Observable.empty<SimilarMoviesResponse>() else Observable.just(cachedSimilarMovies)
@@ -168,20 +136,11 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
     }
 
     override fun searchAll(query: String): Observable<MultiSearchResponse> =
-            movieDbApi.searchMulti(query)
-                    .toObservable()
-                    .doOnNext { analyticTracker.trackEvent("Search: $query. Count: ${it.results.size}") }
-                    .doOnError { Timber.e(it) }
+            networkDataSource.searchAll(query)
 
     override fun getMovieReviews(movieId: Long): Observable<List<MovieReview>> {
-        val remoteReviews = movieDbApi.movieReview(movieId)
-                .toObservable()
-                .doOnNext { analyticTracker.trackEvent("Get Movie Reviews: $movieId") }
-                .map { movieResponse -> movieResponse.results.map { movieMapper.mapMovieReviewResponseToMovieReview(it) } }
+        val remoteReviews = networkDataSource.getMovieReviews(movieId)
                 .doOnNext { movieReviewCache[movieId] = it }
-                .doOnError { Timber.e(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
 
         val cachedReviews: List<MovieReview>? = movieReviewCache[movieId]
         val cachedReviewObservable: Observable<List<MovieReview>> =
@@ -193,16 +152,8 @@ class MovieRepo @Inject constructor(private val movieDbApi: MovieDbApi,
     }
 
     override fun getVideosForMovie(movieId: Long): Observable<List<MovieVideo>> =
-            movieDbApi.videosForMovie(movieId)
-                    .toObservable()
-                    .doOnNext { analyticTracker.trackEvent("Get Videos for Movie: $movieId. Count: ${it.results.size}") }
-                    .doOnError { Timber.e(it) }
-                    .map { videosResponse -> videosResponse.results.map { MovieVideo(it.id, it.site, it.key) } }
+            networkDataSource.getVideosForMovie(movieId)
 
     override fun getMovieImages(movieId: Long): Observable<List<String>> =
-            movieDbApi.imagesForMovie(movieId)
-                    .toObservable()
-                    .doOnNext { analyticTracker.trackEvent("Get Images for Movie: $movieId") }
-                    .doOnError { Timber.e(it) }
-                    .map { imagesResponse -> imagesResponse.backdrops.map { it.filePath } }
+            networkDataSource.getMovieImages(movieId)
 }

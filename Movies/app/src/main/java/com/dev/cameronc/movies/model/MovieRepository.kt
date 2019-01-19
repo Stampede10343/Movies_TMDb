@@ -1,6 +1,5 @@
 package com.dev.cameronc.movies.model
 
-import com.dev.cameronc.moviedb.data.ConfigurationResponse
 import com.dev.cameronc.moviedb.data.MultiSearchResponse
 import com.dev.cameronc.moviedb.data.SearchResponse
 import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
@@ -11,7 +10,6 @@ import com.dev.cameronc.movies.model.movie.MovieReview
 import com.dev.cameronc.movies.model.movie.MovieVideo
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 
 interface MovieRepository {
     fun getUpcomingMovies(page: String): Observable<List<UpcomingMovie>>

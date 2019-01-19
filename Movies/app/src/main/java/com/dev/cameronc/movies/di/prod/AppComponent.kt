@@ -12,6 +12,7 @@ interface AppComponent {
     interface Builder {
         @BindsInstance
         fun app(app: MoviesApp): Builder
+
         fun appModule(appModule: AppModule): Builder
         fun build(): AppComponent
     }

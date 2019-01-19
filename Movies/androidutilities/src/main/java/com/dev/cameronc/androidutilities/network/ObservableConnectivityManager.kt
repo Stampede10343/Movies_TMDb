@@ -5,14 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ObservableConnectivityManager @Inject constructor(private val connectivityManager: ConnectivityManager) : BroadcastReceiver() {
-    private val connectivitySubject: PublishSubject<Boolean> = PublishSubject.create()
+    private val connectivitySubject: Subject<Boolean> = BehaviorSubject.create()
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val isConnected = connectivityManager.activeNetworkInfo?.isConnected == true
@@ -20,4 +21,11 @@ class ObservableConnectivityManager @Inject constructor(private val connectivity
     }
 
     fun connectivityAvailable(): Observable<Boolean> = connectivitySubject.debounce(2, TimeUnit.SECONDS).filter { it }
+
+    fun connectivityChanged(): Observable<Boolean> = connectivitySubject
+            .debounce(1, TimeUnit.SECONDS)
+            .flatMap { isConnected ->
+                if (isConnected) Observable.just(isConnected).delay(2, TimeUnit.SECONDS) else Observable.just(isConnected)
+            }
+
 }

@@ -4,11 +4,14 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.preference.PreferenceManager
 import com.dev.cameronc.androidutilities.network.ObservableConnectivityManager
 import com.dev.cameronc.movies.di.prod.ActivityComponent
 import com.dev.cameronc.movies.di.prod.AppComponent
 import com.dev.cameronc.movies.di.prod.AppModule
 import com.dev.cameronc.movies.di.prod.DaggerAppComponent
+import com.dev.cameronc.movies.di.test.DaggerTestAppComponent
+import com.dev.cameronc.movies.di.test.TestAppComponent
 import com.squareup.leakcanary.LeakCanary
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber

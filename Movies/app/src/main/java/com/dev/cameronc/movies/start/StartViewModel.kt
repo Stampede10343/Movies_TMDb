@@ -1,15 +1,12 @@
 package com.dev.cameronc.movies.start
 
 import android.content.SharedPreferences
-import com.dev.cameronc.moviedb.data.ConfigurationResponse
 import com.dev.cameronc.moviedb.data.SearchResponse
 import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.MovieRepository
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
-import com.google.gson.Gson
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -38,7 +35,7 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
         subscriptions.add(searchQuerySubject
                 .debounce(250, TimeUnit.MILLISECONDS)
                 .filter { it.isNotEmpty() }
-                .flatMap { movieRepository.searchAll(it).subscribeOn(Schedulers.io()) }
+                .flatMap { movieRepository.searchAll(it) }
                 .map { searchResponse -> searchResponse.results.sortedByDescending { it.popularity } }
                 .map { sortedResults ->
                     sortedResults.map {
@@ -59,30 +56,6 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
 
     fun loadMoreMovies() {
         currentPageSubject.onNext(currentPageSubject.value!! + 1)
-    }
-
-    private fun getConfiguration() {
-        subscriptions.add(Observable.concat(movieRepository.getConfiguration(), getConfigFromPreferences())
-                .subscribeOn(Schedulers.io())
-                .filter { it.images.baseUrl.isNotEmpty() }
-                .subscribe { response ->
-                    val json: String = Gson().toJson(response)
-                    if (preferences.getString("configuration", "").isNullOrEmpty()) {
-                        preferences.edit()
-                                .putString("configuration", json)
-                                .apply()
-                    }
-                })
-    }
-
-    private fun getConfigFromPreferences(): Observable<ConfigurationResponse> {
-        val json = preferences.getString("configuration", "")
-        val response: ConfigurationResponse? = Gson().fromJson(json, ConfigurationResponse::class.java)
-        if (response == null) {
-            return Observable.empty()
-        } else {
-            return Observable.just(response)
-        }
     }
 
     fun onSearchEntered(query: String): Observable<SearchResponse> = movieRepository.searchMovies(query)

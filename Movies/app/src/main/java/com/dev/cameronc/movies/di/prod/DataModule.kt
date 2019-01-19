@@ -1,6 +1,7 @@
 package com.dev.cameronc.movies.di.prod
 
 import android.content.Context
+import com.dev.cameronc.movies.di.Network
 import com.dev.cameronc.movies.model.*
 import dagger.Module
 import dagger.Provides
@@ -25,4 +26,14 @@ class DataModule {
     @Provides
     @Singleton
     fun objectBox(context: Context): BoxStore = MyObjectBox.builder().androidContext(context).build()
+
+    @Provides
+    @Network
+    @Singleton
+    fun networkMovieDataSource(networkMovieDataSource: NetworkMovieDataSource): MovieDataSource = networkMovieDataSource
+
+//    @Provides
+//    @Disk
+//    @Singleton
+//    fun diskMovieDataSource(networkMovieDataSource: NetworkMovieDataSource): MovieDataSource = networkMovieDataSource
 }

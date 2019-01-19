@@ -2,6 +2,7 @@ package com.dev.cameronc.movies.di.prod
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import com.dev.cameronc.androidutilities.AnalyticTracker
 import com.dev.cameronc.movies.LoggingAnalyticsTracker
@@ -27,6 +28,9 @@ class AppModule(private val application: MoviesApp) {
     @Provides
     @IntoSet
     fun analyticsTracker(analyticsTracker: LoggingAnalyticsTracker): AnalyticTracker = analyticsTracker
+
+    @Provides
+    fun connectivityManager(): ConnectivityManager = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     companion object {
         const val SCREEN_WIDTH = "screenWidth"

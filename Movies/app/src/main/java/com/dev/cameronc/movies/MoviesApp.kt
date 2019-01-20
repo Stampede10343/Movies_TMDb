@@ -1,7 +1,9 @@
 package com.dev.cameronc.movies
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import com.dev.cameronc.androidutilities.network.ObservableConnectivityManager
@@ -10,6 +12,8 @@ import com.dev.cameronc.movies.di.prod.AppComponent
 import com.dev.cameronc.movies.di.prod.AppModule
 import com.dev.cameronc.movies.di.prod.DaggerAppComponent
 import com.dev.cameronc.movies.di.test.DaggerTestAppComponent
+import com.dev.cameronc.movies.di.test.TestAppComponent
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.squareup.leakcanary.LeakCanary
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
@@ -18,10 +22,13 @@ import javax.inject.Inject
 
 class MoviesApp : Application() {
     @Inject
+    lateinit var sharedPreferences: SharedPreferences
+    @Inject
     lateinit var observableConnectivityManager: ObservableConnectivityManager
     private lateinit var appComponent: AppComponent
 
     override fun onCreate() {
+        if (ProcessPhoenix.isPhoenixProcess(this)) return
         super.onCreate()
 
         if (BuildConfig.DEBUG) {
@@ -58,6 +65,19 @@ class MoviesApp : Application() {
     private fun isTestComponentEnabled() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(COMPONENT, false)
 
     fun getAppComponent(): AppComponent = appComponent
+
+    @SuppressLint("ApplySharedPref")
+    fun swapComponent() {
+        if (appComponent is TestAppComponent) {
+            sharedPreferences.edit()
+                    .putBoolean(COMPONENT, false)
+                    .commit()
+        } else {
+            sharedPreferences.edit()
+                    .putBoolean(COMPONENT, true)
+                    .commit()
+        }
+    }
 
     companion object {
         const val COMPONENT = "component"

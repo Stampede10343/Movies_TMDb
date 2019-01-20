@@ -75,6 +75,8 @@ dependencies {
     implementation 'com.github.Zhuinden:simple-stack:1.13.0'
     implementation 'com.github.marcoscgdev:Licenser:1.0.5'
 
+    implementation 'com.jakewharton:process-phoenix:2.0.0'
+
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
 

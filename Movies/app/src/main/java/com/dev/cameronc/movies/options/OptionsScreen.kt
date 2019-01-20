@@ -7,6 +7,7 @@ import com.dev.cameronc.androidutilities.BaseKey
 import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.marcoscg.licenser.Library
 import com.marcoscg.licenser.License
 import com.marcoscg.licenser.LicenserDialog
@@ -49,6 +50,11 @@ class OptionsScreen : BaseScreen {
                     .setLibrary(Library("Simple Stack", "https://github.com/Zhuinden/simple-stack", License.APACHE))
                     .setLibrary(Library("PhotoView", "https://github.com/chrisbanes/PhotoView", License.APACHE))
                     .show()
+        }
+
+        toggle_app_component.setOnClickListener {
+            MoviesApp.app.swapComponent()
+            postDelayed({ ProcessPhoenix.triggerRebirth(context) }, 100)
         }
     }
 

@@ -9,7 +9,9 @@
         android:id="@+id/actor_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

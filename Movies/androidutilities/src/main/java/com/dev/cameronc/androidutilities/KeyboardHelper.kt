@@ -48,8 +48,6 @@ class KeyboardHelper @Inject constructor(private val activity: AppCompatActivity
     }
 
     fun clearListener() {
-        val activityRootView = activity.window.decorView.findViewById<View>(android.R.id.content)
-        activityRootView.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
         layoutListener = null
     }
 }

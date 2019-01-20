@@ -1,5 +1,6 @@
 package com.dev.cameronc.movies.search
 
+import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.MovieRepo
 import com.dev.cameronc.movies.model.MultiSearchResult
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SearchResultsViewModel @Inject constructor(private val movieRepo: MovieRepo) : ViewModel() {
-    private val resultsSubject = BehaviorSubject.create<List<MultiSearchResult>>()
+    private val resultsSubject = BehaviorSubject.create<ScreenState<List<MultiSearchResult>>>()
     private val querySubject = PublishSubject.create<String>()
     private val subscriptions = CompositeDisposable()
 
@@ -24,7 +25,7 @@ class SearchResultsViewModel @Inject constructor(private val movieRepo: MovieRep
                     movieRepo.searchAll(query).subscribeOn(Schedulers.io()).map { it.results }
                 }
                 .map { allResults -> categorizeResults(allResults) }
-                .subscribe({ resultsSubject.onNext(it) }, { error -> Timber.e(error) }))
+                .subscribe({ resultsSubject.onNext(ScreenState.Ready(it)) }, { error -> Timber.e(error) }))
     }
 
     private fun categorizeResults(allResults: List<com.dev.cameronc.moviedb.data.MultiSearchResult>): MutableList<MultiSearchResult> {
@@ -41,7 +42,7 @@ class SearchResultsViewModel @Inject constructor(private val movieRepo: MovieRep
         if (!query.isNullOrBlank()) querySubject.onNext(query)
     }
 
-    fun results(): Observable<List<MultiSearchResult>> = resultsSubject
+    fun results(): Observable<ScreenState<List<MultiSearchResult>>> = resultsSubject.startWith(ScreenState.Loading())
 
     override fun onDestroy() {
         super.onDestroy()

@@ -10,11 +10,15 @@
     android:paddingStart="1dp"
     android:paddingTop="1dp">
 
-    <com.dev.cameronc.androidutilities.view.RatioImageView
+    <ImageView
         android:id="@+id/actor_item_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="0.66"
+        app:layout_constraintBottom_toTopOf="@id/actor_item_name"
+        app:layout_constraintDimensionRatio="0.68"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@color/colorPrimary" />
 
     <TextView
@@ -26,6 +30,9 @@
         android:padding="4dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/actor_item_image"
         tools:text="Harrison Ford" />
 

@@ -1,7 +1,7 @@
 package com.dev.cameronc.movies.moviedetail
 
 import android.view.View
-import com.dev.cameronc.androidutilities.SnackBarHelper
+import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieRatingFinder
@@ -17,21 +17,22 @@ import javax.inject.Inject
 
 class MovieDetailViewModel @Inject constructor(private val movieRepo: MovieRepo, private val movieRatingFinder: MovieRatingFinder) : ViewModel() {
 
-    fun movieDetails(movieId: Long): Observable<MovieDetails> {
+    fun movieDetails(movieId: Long): Observable<ScreenState<MovieDetails>> {
         return Observable.zip(getMovieDetails(movieId), getMovieCredits(movieId), getRelatedMovies(movieId), getMovieReviews(movieId),
-                Function4<MovieDetailsResponse, MovieCreditsResponse, SimilarMoviesResponse, List<MovieReview>, MovieDetails>
+                Function4<MovieDetailsResponse, MovieCreditsResponse, SimilarMoviesResponse, List<MovieReview>, ScreenState<MovieDetails>>
                 { movieDetails, credits, similarMovies, reviews ->
                     val movieYear = if (movieDetails.releaseDate.isNotEmpty()) movieDetails.releaseDate.subSequence(0, 4) else DateTime.now().year.toString()
                     val movieTitle = "${movieDetails.title} ($movieYear)"
                     val rating = movieRatingFinder.getUSRatingOrEmpty(movieDetails.releaseDates.releases)
                     val genreNames = movieDetails.genres.map { it.name }
 
-                    MovieDetails(movieTitle, movieDetails.overview, movieDetails.releaseDate,
+                    ScreenState.Ready(MovieDetails(movieTitle, movieDetails.overview, movieDetails.releaseDate,
                             movieDetails.runtime, rating, if (rating.isNotEmpty()) View.VISIBLE else View.GONE,
                             movieDetails.backdropPath, genreNames, movieDetails.voteAverage.toString(),
                             if (movieDetails.voteAverage > 0.0) View.VISIBLE else View.GONE, credits.cast,
-                            similarMovies.results, reviews)
+                            similarMovies.results, reviews))
                 })
+                .startWith(ScreenState.Loading())
 
     }
 

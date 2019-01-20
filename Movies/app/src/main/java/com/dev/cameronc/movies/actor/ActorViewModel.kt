@@ -1,5 +1,6 @@
 package com.dev.cameronc.movies.actor
 
+import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.moviedb.data.tv.TvCast
 import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.actor.ActorCredits
@@ -12,15 +13,14 @@ import javax.inject.Inject
 
 class ActorViewModel @Inject constructor(private val actorRepo: ActorRepo) : ViewModel() {
 
-    fun getScreenModel(tmdbActorId: Long): Observable<ActorScreenModel> {
+    fun getScreenModel(tmdbActorId: Long): Observable<ScreenState<ActorScreenModel>> {
         return Observable.zip(getActorDetails(tmdbActorId), getActorMovieCredits(tmdbActorId), getActorTvCredits(),
-                Function3<ActorDetails, ActorCredits, List<TvCast>, ActorScreenModel> { actorDetails, movieCredits, tvCredits ->
-                    ActorScreenModel(actorDetails.tmdbId, actorDetails.name, actorDetails.birthday,
+                Function3<ActorDetails, ActorCredits, List<TvCast>, ScreenState<ActorScreenModel>> { actorDetails, movieCredits, tvCredits ->
+                    ScreenState.Ready(ActorScreenModel(actorDetails.tmdbId, actorDetails.name, actorDetails.birthday,
                             actorDetails.deathDay, "25", actorDetails.placeOfBirth, actorDetails.biography,
-                            actorDetails.profilePhotoPath, movieCredits.roles, tvCredits)
+                            actorDetails.profilePhotoPath, movieCredits.roles, tvCredits))
                 })
-                // Avoids behavior subject pushing the wrong cached actor
-                .filter { it.actorId == tmdbActorId }
+                .startWith(ScreenState.Loading())
     }
 
     private fun getActorDetails(tmdbActorId: Long): Observable<ActorDetails> = actorRepo.getActorDetails(tmdbActorId)

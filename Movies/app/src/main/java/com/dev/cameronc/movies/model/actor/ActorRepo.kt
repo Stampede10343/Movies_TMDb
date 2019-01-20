@@ -88,7 +88,7 @@ class ActorRepo @Inject constructor(private val movieDbApi: MovieDbApi, boxStore
 
     fun getActorDetails(tmdbActorId: Long): Observable<ActorDetails> {
         actorIdSubject.onNext(tmdbActorId)
-        return actorDetailsSubject
+        return actorDetailsSubject.filter { it.tmdbId == tmdbActorId }
     }
 
     fun getActorMovieCredits(): Observable<ActorCreditsResponse> = actorCreditsSubject

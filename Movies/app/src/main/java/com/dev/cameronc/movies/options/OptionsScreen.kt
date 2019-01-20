@@ -3,10 +3,13 @@ package com.dev.cameronc.movies.options
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.View
 import com.dev.cameronc.androidutilities.BaseKey
 import com.dev.cameronc.androidutilities.view.BaseScreen
+import com.dev.cameronc.movies.BuildConfig
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.marcoscg.licenser.Library
 import com.marcoscg.licenser.License
 import com.marcoscg.licenser.LicenserDialog
@@ -48,7 +51,16 @@ class OptionsScreen : BaseScreen {
                     .setLibrary(Library("joda-time-android", "https://github.com/dlew/joda-time-android", License.APACHE))
                     .setLibrary(Library("Simple Stack", "https://github.com/Zhuinden/simple-stack", License.APACHE))
                     .setLibrary(Library("PhotoView", "https://github.com/chrisbanes/PhotoView", License.APACHE))
+                    .setLibrary(Library("Process Phoenix", "https://github.com/JakeWharton/ProcessPhoenix", License.APACHE))
                     .show()
+        }
+
+        if (BuildConfig.DEBUG) {
+            toggle_app_component.visibility = View.VISIBLE
+            toggle_app_component.setOnClickListener {
+                MoviesApp.app.swapComponent()
+                postDelayed({ ProcessPhoenix.triggerRebirth(context) }, 100)
+            }
         }
     }
 

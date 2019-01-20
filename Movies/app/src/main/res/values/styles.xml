@@ -51,6 +51,18 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="OptionMenuRow">
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="OptionMenuTitle" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="OptionMenuDescription" parent="@style/TextAppearance.AppCompat.Body1"/>
+
     <style name="DetailItemTitle">
         <item name="android:fontFamily">@font/opensans_bold</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>

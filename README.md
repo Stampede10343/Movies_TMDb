@@ -10,10 +10,10 @@ The goal for this application is to experiment using Reactive ViewModels and a s
 
 ## Screenshots
 
-![alt text](https://imgur.com/WeMXCYq "Initial Screen")
+![Initial Screen](https://imgur.com/WeMXCYq)
 
-![alt text](https://imgur.com/pMMYdLA "Movie details screen")
+![Movie details screen](https://imgur.com/pMMYdLA)
 
-![alt text](https://imgur.com/75fIQVn "Actor details screen")
+![Actor details screen](https://imgur.com/75fIQVn)
 
-![alt text](https://imgur.com/msd9pA3 "Search screen")
+![Search screen](https://imgur.com/msd9pA3)

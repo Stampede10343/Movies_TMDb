@@ -14,7 +14,7 @@
             style="@style/Toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@string/options"/>
+            app:title="@string/options" />
 
         <LinearLayout
             android:id="@+id/change_theme"
@@ -26,13 +26,13 @@
                 style="@style/OptionMenuTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/theme"/>
+                android:text="@string/theme" />
 
             <TextView
                 style="@style/OptionMenuDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/change_app_theme"/>
+                android:text="@string/change_app_theme" />
         </LinearLayout>
 
         <LinearLayout
@@ -45,31 +45,32 @@
                 style="@style/OptionMenuTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/third_party_libraries"/>
+                android:text="@string/third_party_libraries" />
 
             <TextView
                 style="@style/OptionMenuDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/licenses_and_legal_notices"/>
+                android:text="@string/licenses_and_legal_notices" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/toggle_app_component"
             style="@style/OptionMenuRow"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <TextView
                 style="@style/OptionMenuTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Toggle Application Component"/>
+                android:text="Toggle Application Component" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Switch from Real to Test dependencies"/>
+                android:text="Switch from Real to Test dependencies" />
         </LinearLayout>
     </LinearLayout>
 

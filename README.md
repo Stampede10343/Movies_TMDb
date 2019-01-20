@@ -6,6 +6,8 @@ This is an Android application featuring:
 - Dagger 2
 - Model-View-ViewModel pattern
 
+[![Build Status](https://travis-ci.org/Stampede10343/Movies_TMDb.svg?branch=master)](https://travis-ci.org/Stampede10343/Movies_TMDb)
+
 The goal for this application is to experiment using Reactive ViewModels and a single activity with many views to represent a screen as well as an excellent caching strategy to limit repeated network calls and to provide an excellent user experience even with limited connectivity.
 
 ## Screenshots

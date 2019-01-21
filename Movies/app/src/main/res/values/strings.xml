@@ -16,5 +16,6 @@
     <string name="reviews">Reviews</string>
     <string name="television_credits">Television Credits</string>
     <string name="seasons">Seasons</string>
-    <string name="connectivity_issue">There is a connectivity issue...</string>
+    <string name="connectivity_issue">There is a connectivity issue…</string>
+    <string name="no_rating">No Rating</string>
 </resources>

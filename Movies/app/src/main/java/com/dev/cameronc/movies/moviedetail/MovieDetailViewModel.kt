@@ -4,7 +4,6 @@ import android.view.View
 import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
-import com.dev.cameronc.moviedb.data.movie.detail.MovieRatingFinder
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
 import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.MovieRepo

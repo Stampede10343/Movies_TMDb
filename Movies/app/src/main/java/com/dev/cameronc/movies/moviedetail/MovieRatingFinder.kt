@@ -1,7 +1,8 @@
-package com.dev.cameronc.moviedb.data.movie.detail
+package com.dev.cameronc.movies.moviedetail
 
 import android.content.Context
-import com.dev.cameronc.moviedb.R
+import com.dev.cameronc.moviedb.data.movie.detail.ReleaseResult
+import com.dev.cameronc.movies.R
 import javax.inject.Inject
 
 class MovieRatingFinder @Inject constructor(private val context: Context) {

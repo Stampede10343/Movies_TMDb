@@ -14,7 +14,7 @@ import javax.inject.Inject
 class ActorViewModel @Inject constructor(private val actorRepo: ActorRepo) : ViewModel() {
 
     fun getScreenModel(tmdbActorId: Long): Observable<ScreenState<ActorScreenModel>> {
-        return Observable.zip(getActorDetails(tmdbActorId), getActorMovieCredits(tmdbActorId), getActorTvCredits(),
+        return Observable.zip(getActorDetails(tmdbActorId), getActorMovieCredits(), getActorTvCredits(),
                 Function3<ActorDetails, ActorCredits, List<TvCast>, ScreenState<ActorScreenModel>> { actorDetails, movieCredits, tvCredits ->
                     ScreenState.Ready(ActorScreenModel(actorDetails.tmdbId, actorDetails.name, actorDetails.birthday,
                             actorDetails.deathDay, "25", actorDetails.placeOfBirth, actorDetails.biography,
@@ -25,7 +25,7 @@ class ActorViewModel @Inject constructor(private val actorRepo: ActorRepo) : Vie
 
     private fun getActorDetails(tmdbActorId: Long): Observable<ActorDetails> = actorRepo.getActorDetails(tmdbActorId)
 
-    private fun getActorMovieCredits(tmdbActorId: Long): Observable<ActorCredits> =
+    private fun getActorMovieCredits(): Observable<ActorCredits> =
             actorRepo.getActorMovieCredits()
                     .map { response ->
                         ActorCredits(response.cast

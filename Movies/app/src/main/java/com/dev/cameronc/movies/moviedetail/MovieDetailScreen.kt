@@ -112,8 +112,7 @@ class MovieDetailScreen : AppScreen, Bundleable {
             movie_detail_runtime.visibility = View.VISIBLE
         } else movie_detail_runtime.visibility = View.GONE
 
-        movie_detail_rating
-                .visibility = movieDetails.ratingVisibility
+        movie_detail_rating.visibility = movieDetails.ratingVisibility
         movie_detail_rating.text = movieDetails.rating
 
         movie_detail_rating_average.visibility = movieDetails.voteAverageVisibility

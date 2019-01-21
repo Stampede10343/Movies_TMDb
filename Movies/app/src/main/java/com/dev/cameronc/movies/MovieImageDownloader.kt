@@ -19,7 +19,6 @@ class MovieImageDownloader @Inject constructor(@Named(AppModule.SCREEN_WIDTH) va
         return if (posterPath != null) {
 
             val url = "$baseUrl$posterWidth/$posterPath"
-            Timber.v(url)
             GlideApp.with(view).load(url)
         } else {
             GlideApp.with(view).load("")

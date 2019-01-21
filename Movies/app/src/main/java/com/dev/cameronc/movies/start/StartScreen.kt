@@ -15,7 +15,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
 import android.widget.Toast
 import com.dev.cameronc.androidutilities.KeyboardHelper
-import com.dev.cameronc.androidutilities.view.BaseScreen
+import com.dev.cameronc.androidutilities.ScreenState
+import com.dev.cameronc.movies.AppScreen
 import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
@@ -38,7 +39,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleable, SearchView.OnQueryTextListener, MenuItem.OnMenuItemClickListener {
+class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable, SearchView.OnQueryTextListener, MenuItem.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModel: StartViewModel
@@ -105,10 +106,17 @@ class StartScreen : BaseScreen, MovieCardAdapter.MovieAdapterListener, Bundleabl
 
         viewModel.getUpcomingMovies()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ movies ->
-                    moviesAdapter.addMovies(movies)
-                    if (viewState != null) restoreHierarchyState(viewState)
-                    viewState = null
+                .subscribe({ screenState ->
+                    when (screenState) {
+                        is ScreenState.Ready -> {
+                            showLoadingIndicator(false)
+                            moviesAdapter.addMovies(screenState.data)
+                            if (viewState != null) restoreHierarchyState(viewState)
+                            viewState = null
+                        }
+
+                        is ScreenState.Loading -> showLoadingIndicator(true)
+                    }
                 }, { error -> Toast.makeText(context, error.message, Toast.LENGTH_LONG).show() })
                 .disposeBy(this)
     }

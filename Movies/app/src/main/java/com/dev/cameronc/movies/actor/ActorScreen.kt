@@ -4,21 +4,16 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Parcelable
 import android.support.v7.widget.GridLayoutManager
-import android.transition.Fade
-import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import com.bumptech.glide.request.RequestOptions
 import com.dev.cameronc.androidutilities.DateFormatter
-import com.dev.cameronc.androidutilities.view.BaseScreen
+import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.androidutilities.view.MarginItemDecoration
-import com.dev.cameronc.movies.MovieImageDownloader
-import com.dev.cameronc.movies.MoviesApp
-import com.dev.cameronc.movies.R
+import com.dev.cameronc.androidutilities.view.fadeIn
+import com.dev.cameronc.movies.*
 import com.dev.cameronc.movies.model.actor.ActorScreenModel
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
-import com.dev.cameronc.movies.toDp
 import com.dev.cameronc.movies.tv.TvSeriesScreen
 import com.zhuinden.simplestack.Backstack
 import com.zhuinden.simplestack.Bundleable
@@ -31,7 +26,7 @@ import kotlinx.android.synthetic.main.actor_screen.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class ActorScreen : BaseScreen, Bundleable {
+class ActorScreen : AppScreen, Bundleable {
 
     @Inject
     lateinit var imageDownloader: MovieImageDownloader
@@ -56,12 +51,21 @@ class ActorScreen : BaseScreen, Bundleable {
 
         val tmdbActorId = Backstack.getKey<ActorScreenKey>(context).actorId
         actorViewModel.getScreenModel(tmdbActorId)
-                .subscribe({ actorDetails ->
-                    TransitionManager.beginDelayedTransition(actor_profile_name.parent as ViewGroup, Fade())
-                    setMainActorInfo(actorDetails)
-                    setActorBirthDetails(actorDetails)
-                    setupMovieRolesList(actorDetails)
-                    setupTvRolesList(actorDetails)
+                .subscribe({ screenState ->
+                    when(screenState) {
+                        is ScreenState.Ready -> {
+                            val actorModel = screenState.data
+                            actor_scrollview.fadeIn()
+                            showLoadingIndicator(false)
+                            setMainActorInfo(actorModel)
+                            setActorBirthDetails(actorModel)
+                            setupMovieRolesList(actorModel)
+                            setupTvRolesList(actorModel)
+                        }
+                        is ScreenState.Loading -> {
+                            showLoadingIndicator(true)
+                        }
+                    }
                 }, { error -> Timber.e(error) }).disposeBy(this)
 
     }

@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.start
 
-import android.content.SharedPreferences
+import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.moviedb.data.SearchResponse
 import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.MovieRepository
@@ -13,23 +13,22 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class StartViewModel @Inject constructor(private val movieRepository: MovieRepository, private val preferences: SharedPreferences) : ViewModel() {
+class StartViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
     private val subscriptions = CompositeDisposable()
     private val currentPageSubject = BehaviorSubject.create<Int>()
-    private val upcomingMoviesSubject = BehaviorSubject.create<MutableList<UpcomingMovie>>()
+    private val upcomingMoviesSubject = BehaviorSubject.create<ScreenState<MutableList<UpcomingMovie>>>()
     private val searchResults: BehaviorSubject<List<SearchResult>> = BehaviorSubject.create()
     private val searchQuerySubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     init {
         subscriptions.add(currentPageSubject
-                .debounce(200, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .flatMap { currentPage ->
                     movieRepository.getUpcomingMovies(currentPage.toString()).map { it.toMutableList() }
                 }
                 .takeUntil { currentPageSubject.value == 10 }
                 .subscribe({ movies ->
-                    upcomingMoviesSubject.onNext(movies)
+                    upcomingMoviesSubject.onNext(ScreenState.Ready(movies))
                 }, { error -> Timber.e(error) }))
 
         subscriptions.add(searchQuerySubject
@@ -49,9 +48,10 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
                 }, { error -> Timber.e(error) }))
     }
 
-    fun getUpcomingMovies(page: Int = 1): Observable<MutableList<UpcomingMovie>> {
+    fun getUpcomingMovies(page: Int = 1): Observable<ScreenState<MutableList<UpcomingMovie>>> {
         currentPageSubject.onNext(page)
         return upcomingMoviesSubject
+                .startWith(ScreenState.Loading())
     }
 
     fun loadMoreMovies() {

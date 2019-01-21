@@ -2,6 +2,7 @@ package com.dev.cameronc.movies.search
 
 import android.content.Context
 import android.os.Parcelable
+import android.support.transition.TransitionManager
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -9,7 +10,9 @@ import android.support.v7.widget.SearchView
 import android.util.AttributeSet
 import com.dev.cameronc.androidutilities.BaseKey
 import com.dev.cameronc.androidutilities.KeyboardHelper
-import com.dev.cameronc.androidutilities.view.BaseScreen
+import com.dev.cameronc.androidutilities.ScreenState
+import com.dev.cameronc.androidutilities.view.fadeIn
+import com.dev.cameronc.movies.AppScreen
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.moviedetail.MovieDetailScreen
@@ -22,7 +25,7 @@ import kotlinx.android.synthetic.main.search_results_screen.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class SearchResultsScreen : BaseScreen, SearchView.OnQueryTextListener {
+class SearchResultsScreen : AppScreen, SearchView.OnQueryTextListener {
 
     @Inject
     lateinit var viewModel: SearchResultsViewModel
@@ -38,6 +41,7 @@ class SearchResultsScreen : BaseScreen, SearchView.OnQueryTextListener {
         if (isInEditMode) return
         MoviesApp.activityComponent.inject(this)
 
+        search_results_toolbar.setNavigationOnClickListener { Navigator.getBackstack(context).goBack() }
         search_results_searchview.setOnQueryTextListener(this)
         val key = Backstack.getKey<Key>(context)
         search_results_searchview.setQuery(key.query, true)
@@ -59,9 +63,17 @@ class SearchResultsScreen : BaseScreen, SearchView.OnQueryTextListener {
         viewModel.results()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    adapter.setResults(it)
-                    if (viewState != null) restoreHierarchyState(viewState)
-                    viewState = null
+                    when (it) {
+                        is ScreenState.Loading -> showLoadingIndicator(true)
+                        is ScreenState.Ready -> {
+                            TransitionManager.beginDelayedTransition(this)
+                            search_results_list.fadeIn()
+                            showLoadingIndicator(false)
+                            adapter.setResults(it.data)
+                            if (viewState != null) restoreHierarchyState(viewState)
+                            viewState = null
+                        }
+                    }
                 }, { error -> Timber.e(error) }).disposeBy(this)
 
     }

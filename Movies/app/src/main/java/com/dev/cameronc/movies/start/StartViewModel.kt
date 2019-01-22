@@ -2,6 +2,7 @@ package com.dev.cameronc.movies.start
 
 import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.moviedb.data.SearchResponse
+import com.dev.cameronc.movies.Schedulers
 import com.dev.cameronc.movies.ViewModel
 import com.dev.cameronc.movies.model.MovieRepository
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class StartViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+class StartViewModel @Inject constructor(private val movieRepository: MovieRepository, schedulers: Schedulers) : ViewModel() {
     private val subscriptions = CompositeDisposable()
     private val currentPageSubject = BehaviorSubject.create<Int>()
     private val upcomingMoviesSubject = BehaviorSubject.create<ScreenState<MutableList<UpcomingMovie>>>()
@@ -29,10 +30,10 @@ class StartViewModel @Inject constructor(private val movieRepository: MovieRepos
                 .takeUntil { currentPageSubject.value == 10 }
                 .subscribe({ movies ->
                     upcomingMoviesSubject.onNext(ScreenState.Ready(movies))
-                }, { error -> Timber.e(error) }))
+                }, { error -> upcomingMoviesSubject.onError(error) }))
 
         subscriptions.add(searchQuerySubject
-                .debounce(250, TimeUnit.MILLISECONDS)
+                .debounce(250, TimeUnit.MILLISECONDS, schedulers.backgroundScheduler)
                 .filter { it.isNotEmpty() }
                 .flatMap { movieRepository.searchAll(it) }
                 .map { searchResponse -> searchResponse.results.sortedByDescending { it.popularity } }

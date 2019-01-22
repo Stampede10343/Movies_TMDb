@@ -12,7 +12,7 @@ class RatioImageView : AppCompatImageView {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     constructor(context: Context, attrs: AttributeSet?, style: Int) : super(context, attrs) {
-        val array = context.theme.obtainStyledAttributes(attrs, R.styleable.RatioImageView, 0, 0)
+        val array = context.theme.obtainStyledAttributes(attrs, R.styleable.RatioImageView, style, 0)
         ratio = array.getFloat(R.styleable.RatioImageView_ratio, 1.5f)
 
         array.recycle()

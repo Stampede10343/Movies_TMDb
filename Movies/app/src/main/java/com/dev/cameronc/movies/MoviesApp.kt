@@ -42,6 +42,8 @@ class MoviesApp : Application() {
         setupComponent()
         appComponent.inject(this)
 
+        // We cannot use the suggested new method as its min API 24
+        @Suppress("DEPRECATION")
         val intentFilter = IntentFilter().apply { addAction(ConnectivityManager.CONNECTIVITY_ACTION) }
         registerReceiver(observableConnectivityManager, intentFilter)
     }

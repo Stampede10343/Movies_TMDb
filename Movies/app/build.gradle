@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.objectbox'
+apply from: "../jacoco.gradle"
 
 android {
     compileSdkVersion 28
@@ -14,6 +15,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
     buildTypes {
         release {
@@ -26,6 +32,7 @@ android {
         debug {
             buildConfigField "String", "API_KEY", API_KEY
         }
+
     }
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
@@ -81,6 +88,9 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
 
     implementation 'com.github.chrisbanes:PhotoView:2.1.4'
+    implementation 'org.eluder.coveralls:coveralls-maven-plugin:4.3.0'
+
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 }
 
 androidExtensions {

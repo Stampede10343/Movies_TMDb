@@ -42,6 +42,8 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     testImplementation 'junit:junit:4.12'
+
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 }
 repositories {
     mavenCentral()

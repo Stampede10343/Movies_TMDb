@@ -25,7 +25,7 @@ class MovieDetailViewModel @Inject constructor(private val movieRepo: MovieRepo,
                     val rating = movieRatingFinder.getUSRatingOrEmpty(movieDetails.releaseDates.releases)
                     val genreNames = movieDetails.genres.map { it.name }
 
-                    ScreenState.Ready(MovieDetails(movieTitle, movieDetails.overview, movieDetails.releaseDate,
+                    ScreenState.Ready(MovieDetails(movieId, movieTitle, movieDetails.overview, movieDetails.releaseDate,
                             movieDetails.runtime, rating, if (rating.isNotEmpty()) View.VISIBLE else View.GONE,
                             movieDetails.backdropPath, genreNames, movieDetails.voteAverage.toString(),
                             if (movieDetails.voteAverage > 0.0) View.VISIBLE else View.GONE, credits.cast,

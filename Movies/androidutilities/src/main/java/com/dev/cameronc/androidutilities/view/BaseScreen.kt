@@ -33,7 +33,7 @@ abstract class BaseScreen : FrameLayout, Bundleable {
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        viewReady()
+        if (!isInEditMode) viewReady()
         if (!isInEditMode) analyticTracker.trackScreenHit(getScreenName())
     }
 

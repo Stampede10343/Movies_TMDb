@@ -3,7 +3,8 @@ package com.dev.cameronc.movies.model.movie
 import com.dev.cameronc.moviedb.data.movie.detail.Cast
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMovie
 
-data class MovieDetails(val title: String,
+data class MovieDetails(val id: Long,
+                        val title: String,
                         val overview: String,
                         val releaseDate: String,
                         val runtime: Int,

@@ -49,5 +49,7 @@ class KeyboardHelper @Inject constructor(private val activity: AppCompatActivity
 
     fun clearListener() {
         layoutListener = null
+        keyboardOpened = null
+        keyboardClosed = null
     }
 }

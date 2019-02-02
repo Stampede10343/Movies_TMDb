@@ -33,10 +33,9 @@ class MoviesApp : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            LeakCanary.install(this)
         }
         JodaTimeAndroid.init(this)
-
-        LeakCanary.install(this)
 
         app = this
         setupComponent()

@@ -135,6 +135,7 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         if (searchResultsWindow.isShowing) searchResultsWindow.dismiss()
+        keyboardHelper.dismissKeyboard()
         keyboardHelper.clearListener()
         viewModel.onDestroy()
     }

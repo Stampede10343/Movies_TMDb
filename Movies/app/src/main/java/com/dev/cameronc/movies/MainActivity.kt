@@ -1,6 +1,5 @@
 package com.dev.cameronc.movies
 
-import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
 import com.dev.cameronc.androidutilities.KeyboardHelper

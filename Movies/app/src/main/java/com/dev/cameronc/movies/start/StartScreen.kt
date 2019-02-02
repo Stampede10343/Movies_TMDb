@@ -1,7 +1,6 @@
 package com.dev.cameronc.movies.start
 
 import android.content.Context
-import android.graphics.Rect
 import android.os.Parcelable
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
@@ -11,7 +10,6 @@ import android.support.v7.widget.SearchView
 import android.util.AttributeSet
 import android.view.MenuItem
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
 import android.widget.Toast
 import com.dev.cameronc.androidutilities.KeyboardHelper
@@ -77,21 +75,8 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
         movie_search_view.setOnQueryTextListener(this)
         searchResultsRecyclerView.adapter = searchResultsAdapter
         searchResultsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        searchResultsAdapter.resultClickListener = {
-            viewModel.onSearchEntered("")
+        setupSearchResultClickListener()
 
-            keyboardHelper.dismissKeyboard()
-            keyboardHelper.clearListener()
-
-            searchResultsWindow.dismiss()
-
-            when (it.type) {
-                MediaType.Movie -> Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it.id))
-                MediaType.Person -> Navigator.getBackstack(context).goTo(ActorScreen.ActorScreenKey(it.id))
-                MediaType.Television -> Navigator.getBackstack(context).goTo(TvSeriesScreen.Key(it.id))
-            }
-
-        }
         viewModel.searchResults()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -121,13 +106,26 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
                 .disposeBy(this)
     }
 
-    private fun setWindowSizeToContentSize() {
-        val viewHeight = height
-        val rectangle = Rect()
-        activity.window.decorView.getWindowVisibleDisplayFrame(rectangle)
+    private fun setupSearchResultClickListener() {
+        searchResultsAdapter.resultClickListener = {
+            viewModel.onSearchEntered("")
 
-        val windowHeight = viewHeight - start_toolbar.height
-        searchResultsWindow.height = windowHeight
+            keyboardHelper.dismissKeyboard()
+            keyboardHelper.clearListener()
+
+            searchResultsWindow.dismiss()
+
+            when (it.type) {
+                MediaType.Movie -> navigator.goToScreen(MovieDetailScreen.MovieDetailKey(it.id))
+                MediaType.Person -> navigator.goToScreen(ActorScreen.ActorScreenKey(it.id))
+                MediaType.Television -> navigator.goToScreen(TvSeriesScreen.Key(it.id))
+            }
+
+        }
+    }
+
+    private fun setWindowSizeToContentSize() {
+        searchResultsWindow.height = start_movies.height
     }
 
     override fun getScreenName(): String = "Start Screen"
@@ -155,7 +153,7 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
     }
 
     override fun onQueryTextChange(query: String?): Boolean {
-        if (height > 0 && !searchResultsWindow.isShowing) searchResultsWindow.showAsDropDown(movie_search_view)
+        if (height > 0 && !searchResultsWindow.isShowing) searchResultsWindow.showAsDropDown(start_toolbar)
         viewModel.queryTextChanged(query)
 
         if (query.isNullOrBlank()) searchResultsWindow.dismiss()
@@ -165,8 +163,7 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
     override fun handleBackPressed(): Boolean {
         if (searchResultsWindow.isShowing) searchResultsWindow.dismiss() else return false
 
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(windowToken, 0)
+        keyboardHelper.dismissKeyboard()
 
         return true
     }

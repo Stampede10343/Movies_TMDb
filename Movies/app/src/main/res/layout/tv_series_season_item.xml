@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="192dp"
+    android:layout_height="200dp"
     android:background="@color/dark_grey"
     tools:layout_marginEnd="8dp">
 
@@ -14,7 +14,7 @@
         android:padding="1dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@id/series_item_text"
-        app:layout_constraintDimensionRatio="5:7"
+        app:layout_constraintDimensionRatio="2:3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

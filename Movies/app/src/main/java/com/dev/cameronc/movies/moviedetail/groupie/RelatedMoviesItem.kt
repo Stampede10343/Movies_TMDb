@@ -2,6 +2,7 @@ package com.dev.cameronc.movies.moviedetail.groupie
 
 import android.graphics.Rect
 import android.view.View
+import android.view.ViewGroup
 import com.dev.cameronc.androidutilities.view.MarginItemDecoration
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMovie
 import com.dev.cameronc.movies.MovieImageDownloader
@@ -27,6 +28,9 @@ class RelatedMoviesItem(private val similarMovies: List<SimilarMovie>, private v
             val margin = 8.toDp()
             viewHolder.root.movie_details_related.addItemDecoration(MarginItemDecoration(Rect(margin, 0, margin, 0)))
 
-        } else viewHolder.root.visibility = View.GONE
+        } else {
+            viewHolder.root.visibility = View.GONE
+            viewHolder.root.layoutParams = ViewGroup.LayoutParams(0, 0)
+        }
     }
 }

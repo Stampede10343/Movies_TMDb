@@ -18,4 +18,6 @@
     <string name="seasons">Seasons</string>
     <string name="connectivity_issue">There is a connectivity issue…</string>
     <string name="no_rating">No Rating</string>
+    <string name="toggle_application_component">Toggle Application Component</string>
+    <string name="switch_from_real_to_test_dependencies">Switch from Real to Test dependencies</string>
 </resources>

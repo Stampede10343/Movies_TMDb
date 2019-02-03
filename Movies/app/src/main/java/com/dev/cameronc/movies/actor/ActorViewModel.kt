@@ -14,7 +14,7 @@ import javax.inject.Inject
 class ActorViewModel @Inject constructor(private val actorRepo: ActorRepo) : ViewModel() {
 
     fun getScreenModel(tmdbActorId: Long): Observable<ScreenState<ActorScreenModel>> {
-        return Observable.zip(getActorDetails(tmdbActorId), getActorMovieCredits(), getActorTvCredits(),
+        return Observable.zip(getActorDetails(tmdbActorId), getActorMovieCredits(tmdbActorId), getActorTvCredits(tmdbActorId),
                 Function3<ActorDetails, ActorCredits, List<TvCast>, ScreenState<ActorScreenModel>> { actorDetails, movieCredits, tvCredits ->
                     ScreenState.Ready(ActorScreenModel(actorDetails.tmdbId, actorDetails.name, actorDetails.birthday,
                             actorDetails.deathDay, "25", actorDetails.placeOfBirth, actorDetails.biography,
@@ -25,19 +25,18 @@ class ActorViewModel @Inject constructor(private val actorRepo: ActorRepo) : Vie
 
     private fun getActorDetails(tmdbActorId: Long): Observable<ActorDetails> = actorRepo.getActorDetails(tmdbActorId)
 
-    private fun getActorMovieCredits(): Observable<ActorCredits> =
-            actorRepo.getActorMovieCredits()
+    private fun getActorMovieCredits(tmdbActorId: Long): Observable<ActorCredits> =
+            actorRepo.getActorMovieCredits(tmdbActorId)
                     .map { response ->
                         ActorCredits(response.cast
                                 .asSequence()
                                 .toMutableList()
-                                .asSequence()
                                 .filter { !it.posterPath.isNullOrBlank() }
                                 .sortedByDescending { it.popularity }
                                 .toList())
                     }
 
-    private fun getActorTvCredits(): Observable<List<TvCast>> =
+    private fun getActorTvCredits(tmdbActorId: Long): Observable<List<TvCast>> =
             actorRepo.getActorTvCredits()
                     .map { tvCredits ->
                         tvCredits.toMutableList()

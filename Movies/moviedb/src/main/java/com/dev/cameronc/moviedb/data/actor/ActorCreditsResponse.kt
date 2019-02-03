@@ -8,5 +8,5 @@ data class ActorCreditsResponse(
         @SerializedName("crew")
         val crew: List<Role>,
         @SerializedName("id")
-        val id: Int
+        val id: Long
 )

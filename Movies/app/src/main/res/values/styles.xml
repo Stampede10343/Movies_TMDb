@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actorItemTheme">@style/ActorItem</item>
         <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="contentStyle">@style/Content</item>
     </style>
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
@@ -15,6 +16,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actorItemTheme">@style/ActorItem.Light</item>
         <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="contentStyle">@style/Content.Light</item>
     </style>
 
     <style name="ActorItem">
@@ -23,6 +25,14 @@
 
     <style name="ActorItem.Light">
         <item name="android:background">@color/dark_white</item>
+    </style>
+
+    <style name="Content">
+        <item name="android:background">@color/dark_grey</item>
+    </style>
+
+    <style name="Content.Light">
+        <item name="android:background">@color/off_white</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">

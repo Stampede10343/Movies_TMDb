@@ -13,7 +13,6 @@ import com.dev.cameronc.movies.di.prod.AppModule
 import com.dev.cameronc.movies.di.prod.DaggerAppComponent
 import com.dev.cameronc.movies.di.test.DaggerTestAppComponent
 import com.dev.cameronc.movies.di.test.TestAppComponent
-import com.jakewharton.processphoenix.ProcessPhoenix
 import com.squareup.leakcanary.LeakCanary
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
@@ -28,7 +27,6 @@ class MoviesApp : Application() {
     private lateinit var appComponent: AppComponent
 
     override fun onCreate() {
-        if (ProcessPhoenix.isPhoenixProcess(this)) return
         super.onCreate()
 
         if (BuildConfig.DEBUG) {

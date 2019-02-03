@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
+import com.dev.cameronc.androidutilities.BaseKey
 import com.dev.cameronc.androidutilities.KeyboardHelper
 import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.movies.AppScreen
@@ -170,14 +171,14 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         if (item.title == "Options") {
-            post { Navigator.getBackstack(context).goTo(OptionsScreen.Key()) }
+            post { navigator.goToScreen(OptionsScreen.Key()) }
         }
 
         return false
     }
 
     @Parcelize
-    class StartKey : StateKey, Parcelable {
+    class StartKey : BaseKey(), Parcelable {
         override fun layout(): Int = R.layout.start_screen
         override fun viewChangeHandler(): ViewChangeHandler = SegueViewChangeHandler()
     }

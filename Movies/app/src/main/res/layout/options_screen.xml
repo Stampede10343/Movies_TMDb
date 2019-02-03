@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.dev.cameronc.movies.options.OptionsScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
+        style="?attr/contentStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -59,18 +61,20 @@
             style="@style/OptionMenuRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 style="@style/OptionMenuTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Toggle Application Component" />
+                android:text="@string/toggle_application_component" />
 
             <TextView
+                style="@style/OptionMenuDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Switch from Real to Test dependencies" />
+                android:text="@string/switch_from_real_to_test_dependencies" />
         </LinearLayout>
     </LinearLayout>
 

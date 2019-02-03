@@ -9,7 +9,6 @@ import com.dev.cameronc.androidutilities.view.BaseScreen
 import com.dev.cameronc.movies.BuildConfig
 import com.dev.cameronc.movies.MoviesApp
 import com.dev.cameronc.movies.R
-import com.jakewharton.processphoenix.ProcessPhoenix
 import com.marcoscg.licenser.Library
 import com.marcoscg.licenser.License
 import com.marcoscg.licenser.LicenserDialog
@@ -59,7 +58,7 @@ class OptionsScreen : BaseScreen {
             toggle_app_component.visibility = View.VISIBLE
             toggle_app_component.setOnClickListener {
                 MoviesApp.app.swapComponent()
-                postDelayed({ ProcessPhoenix.triggerRebirth(context) }, 100)
+                activity.recreate()
             }
         }
     }

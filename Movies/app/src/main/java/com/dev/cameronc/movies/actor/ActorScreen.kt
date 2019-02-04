@@ -74,7 +74,7 @@ class ActorScreen : AppScreen, Bundleable {
         actor_profile_name.text = actorDetails.name
         actor_profile_description.text = actorDetails.biography
         imageDownloader.load(actorDetails.profileImagePath, actor_profile_image)
-                .apply(RequestOptions.centerCropTransform().placeholder(R.drawable.empty_profile))
+                .apply(RequestOptions().placeholder(R.drawable.empty_profile).centerCrop())
                 .into(actor_profile_image)
     }
 

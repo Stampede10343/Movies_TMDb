@@ -6,7 +6,6 @@ import android.os.Parcelable
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.View
-import com.dev.cameronc.androidutilities.BaseKey
 import com.dev.cameronc.androidutilities.ScreenState
 import com.dev.cameronc.movies.AppScreen
 import com.dev.cameronc.movies.MovieImageDownloader
@@ -20,7 +19,6 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import com.zhuinden.simplestack.Backstack
 import com.zhuinden.simplestack.Bundleable
-import com.zhuinden.simplestack.navigator.Navigator
 import com.zhuinden.simplestack.navigator.StateKey
 import com.zhuinden.simplestack.navigator.ViewChangeHandler
 import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
@@ -55,10 +53,7 @@ class MovieDetailScreen : AppScreen, Bundleable {
 
     override fun viewReady() {
         movie_detail_toolbar.setNavigationOnClickListener {
-            val backstack = Navigator.getBackstack(context)
-            if (backstack.getHistory<BaseKey>().size > 2) {
-                backstack.goUp(StartScreen.StartKey())
-            } else backstack.goBack()
+            navigator.goUpToScreen(StartScreen.StartKey())
         }
 
         val movieId = Backstack.getKey<MovieDetailKey>(context).tmdbId

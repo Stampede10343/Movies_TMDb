@@ -26,8 +26,6 @@ import com.dev.cameronc.movies.options.OptionsScreen
 import com.dev.cameronc.movies.search.SearchResultsScreen
 import com.dev.cameronc.movies.tv.TvSeriesScreen
 import com.zhuinden.simplestack.Bundleable
-import com.zhuinden.simplestack.navigator.Navigator
-import com.zhuinden.simplestack.navigator.StateKey
 import com.zhuinden.simplestack.navigator.ViewChangeHandler
 import com.zhuinden.simplestack.navigator.changehandlers.SegueViewChangeHandler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -144,12 +142,12 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
     }
 
     override fun onItemClicked(tmdbId: Long) {
-        Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(tmdbId))
+        navigator.goToScreen(MovieDetailScreen.MovieDetailKey(tmdbId))
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         keyboardHelper.dismissKeyboard()
-        if (!query.isNullOrBlank()) Navigator.getBackstack(context).goTo(SearchResultsScreen.Key(query))
+        if (!query.isNullOrBlank()) navigator.goToScreen(SearchResultsScreen.Key(query))
         return true
     }
 

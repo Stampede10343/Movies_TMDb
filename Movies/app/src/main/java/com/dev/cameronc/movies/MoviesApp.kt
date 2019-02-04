@@ -76,6 +76,8 @@ class MoviesApp : Application() {
                     .putBoolean(COMPONENT, true)
                     .commit()
         }
+
+        setupComponent()
     }
 
     companion object {

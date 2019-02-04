@@ -16,6 +16,10 @@ abstract class AppScreen : BaseScreen {
     lateinit var navigator: AppNavigator
 
     protected fun showLoadingIndicator(visible: Boolean) {
-        activity.findViewById<View>(R.id.loading_indicator).visibility = if (visible) View.VISIBLE else View.GONE
+        val loadingIndicator = activity.findViewById<View>(R.id.loading_indicator)
+        if(visible) {
+            loadingIndicator.visibility = View.VISIBLE
+            loadingIndicator.bringToFront()
+        } else loadingIndicator.visibility = View.GONE
     }
 }

@@ -70,7 +70,7 @@ class MovieDetailScreen : AppScreen, Bundleable {
                                 val data: MovieDetails = movieDetailsState.data
                                 add(MovieDetailBackdrop(data.backdropPath, imageDownloader).apply {
                                     backdropClicked {
-                                        showMovieGallery(movieDetailsState.data.id)
+                                        showMovieGallery(data.id)
                                     }
                                 })
                                 val runtime = context.getString(R.string.movie_duration, data.runtime.toString())

@@ -2,6 +2,7 @@ package com.dev.cameronc.movies.model
 
 import android.content.SharedPreferences
 import com.dev.cameronc.androidutilities.AnalyticTrackingHelper
+import com.dev.cameronc.androidutilities.network.NetworkConnectivityRetryTransformer
 import com.dev.cameronc.androidutilities.network.ObservableConnectivityManager
 import com.dev.cameronc.moviedb.api.MovieDbApi
 import com.dev.cameronc.moviedb.data.MultiSearchResponse
@@ -18,7 +19,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
 import timber.log.Timber
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDbApi,
@@ -30,15 +30,7 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
     override fun getUpcomingMovies(page: String): Observable<List<UpcomingMovie>> {
         return movieDbApi.getUpcomingMovies(page)
                 .subscribeOn(Schedulers.io())
-                .retryWhen { throwableObservable ->
-                    throwableObservable.flatMap { exception ->
-                        if (exception is UnknownHostException) {
-                            connectivityManager.connectivityAvailable()
-                        } else {
-                            Observable.error(exception)
-                        }
-                    }
-                }
+                .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .map { it.results }
                 .map { movies -> movies.map { movieResponseItem -> movieMapper.mapMovieResponseToUpcomingMovie(movieResponseItem) } }
                 .doOnNext { preferences.edit().putLong("movie_save_time", DateTime.now().millis).apply() }
@@ -47,17 +39,9 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
 
     override fun searchMovies(query: String): Observable<SearchResponse> {
         return movieDbApi.search(query)
-                .retryWhen { throwableObservable ->
-                    throwableObservable.flatMap { exception ->
-                        if (exception is UnknownHostException) {
-                            connectivityManager.connectivityAvailable()
-                        } else {
-                            Observable.error(exception)
-                        }
-                    }
-                }
+                .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .doOnNext { analyticTracker.trackEvent("Search Movies: $query") }
-                .doOnError { Timber.v(it) }
+                .doOnError { Timber.e(it) }
     }
 
     override fun getMovieDetails(movieId: Long): Observable<MovieDetailsResponse> {
@@ -66,15 +50,7 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
                 .doOnNext { analyticTracker.trackEvent("Get Movie Details: $movieId") }
                 .doOnError { Timber.e(it) }
                 .subscribeOn(Schedulers.io())
-                .retryWhen { throwableObservable ->
-                    throwableObservable.flatMap { exception ->
-                        if (exception is UnknownHostException) {
-                            connectivityManager.connectivityAvailable()
-                        } else {
-                            Observable.error(exception)
-                        }
-                    }
-                }
+                .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -84,15 +60,7 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
                 .doOnNext { analyticTracker.trackEvent("Get Movie Credits: $movieId") }
                 .doOnError { Timber.v(it) }
                 .subscribeOn(Schedulers.io())
-                .retryWhen { throwableObservable ->
-                    throwableObservable.flatMap { exception ->
-                        if (exception is UnknownHostException) {
-                            connectivityManager.connectivityAvailable()
-                        } else {
-                            Observable.error(exception)
-                        }
-                    }
-                }
+                .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -102,15 +70,7 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
                 .doOnNext { analyticTracker.trackEvent("Get SimilarMovies $movieId. Count: ${it.results.size}") }
                 .doOnError { Timber.v(it) }
                 .subscribeOn(Schedulers.io())
-                .retryWhen { throwableObservable ->
-                    throwableObservable.flatMap { exception ->
-                        if (exception is UnknownHostException) {
-                            connectivityManager.connectivityAvailable()
-                        } else {
-                            Observable.error(exception)
-                        }
-                    }
-                }
+                .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -118,13 +78,7 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
         return movieDbApi.searchMulti(query)
                 .toObservable()
                 .subscribeOn(Schedulers.io())
-                .retryWhen { throwableObservable ->
-                    throwableObservable.flatMap { exception ->
-                        if (exception is UnknownHostException) {
-                            connectivityManager.connectivityAvailable()
-                        } else Observable.error(exception)
-                    }
-                }
+                .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .doOnNext { analyticTracker.trackEvent("Search: $query. Count: ${it.results.size}") }
                 .doOnError { Timber.e(it) }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -137,15 +91,7 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
                 .map { movieResponse -> movieResponse.results.map { movieMapper.mapMovieReviewResponseToMovieReview(it) } }
                 .doOnError { Timber.e(it) }
                 .subscribeOn(Schedulers.io())
-                .retryWhen { throwableObservable ->
-                    throwableObservable.flatMap { exception ->
-                        if (exception is UnknownHostException) {
-                            connectivityManager.connectivityAvailable()
-                        } else {
-                            Observable.error(exception)
-                        }
-                    }
-                }
+                .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .observeOn(AndroidSchedulers.mainThread())
     }
 

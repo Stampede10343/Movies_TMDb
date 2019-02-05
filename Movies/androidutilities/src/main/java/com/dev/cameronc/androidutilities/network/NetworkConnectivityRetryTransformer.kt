@@ -5,7 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import java.net.UnknownHostException
 
-class NetworkConnectivityRetryTransformer<T>(private val connectivityManager: ObservableConnectivityManager) : ObservableTransformer<T, T> {
+class NetworkConnectivityRetryTransformer<T> private constructor(private val connectivityManager: ObservableConnectivityManager) : ObservableTransformer<T, T> {
 
     override fun apply(upstream: Observable<T>): ObservableSource<T> {
         return upstream.retryWhen { exceptionObservable ->

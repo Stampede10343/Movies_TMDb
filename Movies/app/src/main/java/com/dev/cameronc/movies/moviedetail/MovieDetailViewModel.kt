@@ -6,7 +6,7 @@ import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
 import com.dev.cameronc.movies.ViewModel
-import com.dev.cameronc.movies.model.MovieRepo
+import com.dev.cameronc.movies.model.MovieRepository
 import com.dev.cameronc.movies.model.movie.MovieDetails
 import com.dev.cameronc.movies.model.movie.MovieReview
 import io.reactivex.Observable
@@ -14,7 +14,7 @@ import io.reactivex.functions.Function4
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class MovieDetailViewModel @Inject constructor(private val movieRepo: MovieRepo, private val movieRatingFinder: MovieRatingFinder) : ViewModel() {
+class MovieDetailViewModel @Inject constructor(private val movieRepo: MovieRepository, private val movieRatingFinder: MovieRatingFinder) : ViewModel() {
 
     fun movieDetails(movieId: Long): Observable<ScreenState<MovieDetails>> {
         return Observable.zip(getMovieDetails(movieId), getMovieCredits(movieId), getRelatedMovies(movieId), getMovieReviews(movieId),

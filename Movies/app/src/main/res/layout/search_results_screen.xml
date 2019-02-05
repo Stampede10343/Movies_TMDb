@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
+        style="?attr/contentStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_results_toolbar"
-            tools:listitem="@layout/search_result_item"
+            tools:listitem="@layout/multi_search_item"
             tools:visibility="visible" />
     </android.support.constraint.ConstraintLayout>
 </com.dev.cameronc.movies.search.SearchResultsScreen>

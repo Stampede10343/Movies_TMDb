@@ -8,17 +8,14 @@ import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
 import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
+import com.dev.cameronc.movies.di.Disk
 import com.dev.cameronc.movies.di.Network
-import com.dev.cameronc.movies.model.movie.MovieMapper
 import com.dev.cameronc.movies.model.movie.MovieReview
 import com.dev.cameronc.movies.model.movie.MovieVideo
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
-import io.objectbox.Box
-import io.objectbox.BoxStore
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,12 +23,10 @@ import javax.inject.Singleton
 
 @Singleton
 class MovieRepo @Inject constructor(@Network private val networkDataSource: MovieDataSource,
-                                    boxStore: BoxStore,
-                                    private val movieMapper: MovieMapper,
+                                    @Disk private val diskDataStore: MovieDataSource,
                                     private val analyticTracker: AnalyticTrackingHelper,
                                     private val preferences: SharedPreferences) : MovieRepository {
 
-    private val movieItemBox: Box<UpcomingMovie> = boxStore.boxFor(UpcomingMovie::class.java)
     private val getMoviesSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val moviesSubject: BehaviorSubject<List<UpcomingMovie>> = BehaviorSubject.create()
     private var moviesSubscription: Disposable
@@ -65,14 +60,13 @@ class MovieRepo @Inject constructor(@Network private val networkDataSource: Movi
     private fun getMoviesFromApi(page: String): Observable<List<UpcomingMovie>> =
             networkDataSource.getUpcomingMovies(page)
 
-    private fun getMoviesFromBox(): Observable<MutableList<UpcomingMovie>> {
+    private fun getMoviesFromBox(): Observable<List<UpcomingMovie>> {
         val lastSaveTime = LocalDate(preferences.getLong("movie_save_time", Long.MAX_VALUE))
         val yesterday = LocalDate.now().minusDays(1)
         return if (lastSaveTime.isBefore(yesterday)) {
             Observable.empty()
         } else {
-            val allMovies = movieItemBox.all//.sortedByDescending { it.popularity }.toMutableList()
-            if (allMovies.isNotEmpty()) Observable.just(allMovies) else Observable.empty()
+            diskDataStore.getUpcomingMovies("")
         }
     }
 
@@ -82,17 +76,7 @@ class MovieRepo @Inject constructor(@Network private val networkDataSource: Movi
     }
 
     override fun saveMovies(movies: List<MovieResponseItem>) {
-        val allMovies = movieItemBox.all
-        val newMovies = movies.asSequence()
-                .toMutableList()
-                .asSequence()
-                .map { movieMapper.mapMovieResponseToUpcomingMovie(it) }
-                .toMutableList()
-        for (movie in allMovies) {
-            newMovies.remove(movie)
-        }
-        preferences.edit().putLong("movie_save_time", DateTime.now().millis).apply()
-        movieItemBox.put(newMovies)
+        diskDataStore.saveMovies(movies)
     }
 
     override fun searchMovies(query: String): Observable<SearchResponse> =

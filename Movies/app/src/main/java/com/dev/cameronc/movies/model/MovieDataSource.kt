@@ -2,6 +2,7 @@ package com.dev.cameronc.movies.model
 
 import com.dev.cameronc.moviedb.data.MultiSearchResponse
 import com.dev.cameronc.moviedb.data.SearchResponse
+import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
 import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
@@ -20,4 +21,5 @@ interface MovieDataSource {
     fun getMovieReviews(movieId: Long): Observable<List<MovieReview>>
     fun getVideosForMovie(movieId: Long): Observable<List<MovieVideo>>
     fun getMovieImages(movieId: Long): Observable<List<String>>
+    fun saveMovies(movies: List<MovieResponseItem>)
 }

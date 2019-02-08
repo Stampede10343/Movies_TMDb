@@ -7,6 +7,7 @@ import com.dev.cameronc.androidutilities.network.ObservableConnectivityManager
 import com.dev.cameronc.moviedb.api.MovieDbApi
 import com.dev.cameronc.moviedb.data.MultiSearchResponse
 import com.dev.cameronc.moviedb.data.SearchResponse
+import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
 import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
 import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
@@ -108,4 +109,8 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
                     .doOnNext { analyticTracker.trackEvent("Get Images for Movie: $movieId") }
                     .doOnError { Timber.e(it) }
                     .map { imagesResponse -> imagesResponse.backdrops.map { it.filePath } }
+
+    override fun saveMovies(movies: List<MovieResponseItem>) {
+        // NoOp
+    }
 }

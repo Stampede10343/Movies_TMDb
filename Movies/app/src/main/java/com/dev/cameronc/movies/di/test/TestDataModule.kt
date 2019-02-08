@@ -1,6 +1,7 @@
 package com.dev.cameronc.movies.di.test
 
 import android.content.Context
+import com.dev.cameronc.movies.di.Disk
 import com.dev.cameronc.movies.di.Network
 import com.dev.cameronc.movies.model.*
 import dagger.Module
@@ -31,4 +32,9 @@ class TestDataModule {
     @Network
     @Singleton
     fun networkMovieDataSource(networkMovieDataSource: NetworkMovieDataSource): MovieDataSource = networkMovieDataSource
+
+    @Provides
+    @Disk
+    @Singleton
+    fun diskMovieDataSource(boxDataStore: MovieBoxDataStore): MovieDataSource = boxDataStore
 }

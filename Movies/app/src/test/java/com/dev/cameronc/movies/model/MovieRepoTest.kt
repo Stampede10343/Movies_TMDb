@@ -2,18 +2,24 @@ package com.dev.cameronc.movies.model
 
 import android.content.SharedPreferences
 import com.dev.cameronc.androidutilities.AnalyticTrackingHelper
+import com.dev.cameronc.moviedb.data.movie.MovieResponseItem
+import com.dev.cameronc.moviedb.data.movie.detail.MovieCreditsResponse
+import com.dev.cameronc.moviedb.data.movie.detail.MovieDetailsResponse
+import com.dev.cameronc.moviedb.data.movie.detail.ReleaseDates
+import com.dev.cameronc.moviedb.data.movie.detail.SimilarMoviesResponse
+import com.dev.cameronc.movies.model.movie.MovieReview
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
+import io.reactivex.schedulers.TestScheduler
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.*
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import java.util.concurrent.TimeUnit
 
 class MovieRepoTest {
     private lateinit var movieRepo: MovieRepo
@@ -105,5 +111,89 @@ class MovieRepoTest {
         val allMovies = diskMovies.toMutableList()
         allMovies.addAll(networkMovies)
         testObserver.assertValue(allMovies)
+    }
+
+    @Test
+    fun testMovieDetailsGetCachedAfterNetworkResponse() {
+        val movieDetailsResponse = MovieDetailsResponse(false, "", false, 0, emptyList(), "", 1, "1", "en", "title", "overview", 1.0, "", emptyList(), emptyList(), "", ReleaseDates(emptyList()), 1L, 90, emptyList(), "", "", "", false, 1.0, 1)
+        val testScheduler = TestScheduler()
+        `when`(networkDataSource.getMovieDetails(0)).thenReturn(Observable.just(movieDetailsResponse).delay(100, TimeUnit.MILLISECONDS, testScheduler))
+
+        val testObserver = TestObserver.create<MovieDetailsResponse>()
+        movieRepo.getMovieDetails(0).subscribe(testObserver)
+
+        testScheduler.advanceTimeBy(100, TimeUnit.MILLISECONDS)
+        testObserver.assertValue(movieDetailsResponse)
+
+        val testObserver2 = TestObserver.create<MovieDetailsResponse>()
+        movieRepo.getMovieDetails(0).subscribe(testObserver2)
+        testObserver2.assertValue(movieDetailsResponse)
+    }
+
+    @Test
+    fun testMovieCreditsGetCachedAfterNetworkResponse() {
+        val testScheduler = TestScheduler()
+        val movieCreditsResponse = MovieCreditsResponse(emptyList(), emptyList(), 1)
+        `when`(networkDataSource.getMovieCredits(1)).thenReturn(Observable.just(movieCreditsResponse).delay(1, TimeUnit.SECONDS, testScheduler))
+
+        val testObserver = TestObserver.create<MovieCreditsResponse>()
+        movieRepo.getMovieCredits(1).subscribe(testObserver)
+        testScheduler.advanceTimeBy(1, TimeUnit.SECONDS)
+
+        testObserver.assertValue(movieCreditsResponse)
+
+        val testObserver2 = TestObserver.create<MovieCreditsResponse>()
+        movieRepo.getMovieCredits(1).subscribe(testObserver2)
+        testObserver2.assertValue(movieCreditsResponse)
+    }
+
+    @Test
+    fun testSimilarMoviesGetCachedAfterNetworkResponse() {
+        val testScheduler = TestScheduler()
+        val similarMovies = SimilarMoviesResponse(1, emptyList(), 2, 50)
+        `when`(networkDataSource.getSimilarMovies(1)).thenReturn(Observable.just(similarMovies).delay(1, TimeUnit.SECONDS, testScheduler))
+
+        val testObserver = TestObserver.create<SimilarMoviesResponse>()
+        movieRepo.getSimilarMovies(1).subscribe(testObserver)
+        testScheduler.advanceTimeBy(1, TimeUnit.SECONDS)
+
+        testObserver.assertValue(similarMovies)
+
+        val testObserver2 = TestObserver.create<SimilarMoviesResponse>()
+        movieRepo.getSimilarMovies(1).subscribe(testObserver2)
+        testObserver2.assertValue(similarMovies)
+    }
+
+    @Test
+    fun testMovieReviewsGetCachedAfterNetworkResponse() {
+        val testScheduler = TestScheduler()
+        val movieReviews = emptyList<MovieReview>()
+        `when`(networkDataSource.getMovieReviews(1)).thenReturn(Observable.just(movieReviews).delay(1, TimeUnit.SECONDS, testScheduler))
+
+        val testObserver = TestObserver.create<List<MovieReview>>()
+        movieRepo.getMovieReviews(1).subscribe(testObserver)
+        testScheduler.advanceTimeBy(1, TimeUnit.SECONDS)
+
+        testObserver.assertValue(movieReviews)
+
+        val testObserver2 = TestObserver.create<List<MovieReview>>()
+        movieRepo.getMovieReviews(1).subscribe(testObserver2)
+        testObserver2.assertValue(movieReviews)
+    }
+
+    @Test
+    fun testSaveMoviesDelegatesToTheDiskDataSourceToSave() {
+        val movies = listOf(MovieResponseItem("path", false, "overview", "", 1, 1, "Title", "en", "title", null, 1f, 1, false, 1f))
+        movieRepo.saveMovies(movies)
+
+        verify(diskDataSource).saveMovies(movies)
+    }
+
+    @Test
+    fun testSaveMoviesDoesNotDelegateToNetworkDataSource() {
+        val movies = listOf(MovieResponseItem("path", false, "overview", "", 1, 1, "Title", "en", "title", null, 1f, 1, false, 1f))
+        movieRepo.saveMovies(movies)
+
+        verify(networkDataSource, never()).saveMovies(movies)
     }
 }

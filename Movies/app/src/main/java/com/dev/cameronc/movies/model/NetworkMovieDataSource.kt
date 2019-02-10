@@ -59,7 +59,7 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
         return movieDbApi.movieCredits(movieId)
                 .toObservable()
                 .doOnNext { analyticTracker.trackEvent("Get Movie Credits: $movieId") }
-                .doOnError { Timber.v(it) }
+                .doOnError { Timber.e(it) }
                 .subscribeOn(Schedulers.io())
                 .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -69,7 +69,7 @@ class NetworkMovieDataSource @Inject constructor(private val movieDbApi: MovieDb
         return movieDbApi.similarMovies(movieId)
                 .toObservable()
                 .doOnNext { analyticTracker.trackEvent("Get SimilarMovies $movieId. Count: ${it.results.size}") }
-                .doOnError { Timber.v(it) }
+                .doOnError { Timber.e(it) }
                 .subscribeOn(Schedulers.io())
                 .compose(NetworkConnectivityRetryTransformer.create(connectivityManager))
                 .observeOn(AndroidSchedulers.mainThread())

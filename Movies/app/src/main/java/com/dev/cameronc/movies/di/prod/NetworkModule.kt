@@ -51,7 +51,7 @@ class NetworkModule {
     fun provideApiKeyInterceptor(): Interceptor {
         return Interceptor { chain ->
             val request = chain.request()
-            val url = request.url()
+            val url = request.url
                     .newBuilder()
                     .addQueryParameter("api_key", BuildConfig.API_KEY)
                     .build()
@@ -98,7 +98,11 @@ class NetworkModule {
 
     @Provides
     fun loggingInterceptor(cache: Cache): HttpLoggingInterceptor {
-        val interceptor = HttpLoggingInterceptor { message -> Timber.v("$message\nCache Stats: ${cache.hitCount()}/${cache.requestCount()}") }
+        val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                Timber.v("$message\nCache Stats: ${cache.hitCount()}/${cache.requestCount()}")
+            }
+        })
         interceptor.level = HttpLoggingInterceptor.Level.BASIC
         return interceptor
     }

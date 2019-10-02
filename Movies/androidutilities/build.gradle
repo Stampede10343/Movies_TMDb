@@ -33,11 +33,11 @@ dependencies {
 
     implementation 'com.github.Zhuinden:simple-stack:1.13.0'
 
-    implementation 'net.danlew:android.joda:2.10.0'
-    kapt "com.google.dagger:dagger-compiler:2.21"
-    implementation "com.google.dagger:dagger:2.21"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.1'
+    implementation 'net.danlew:android.joda:2.10.3'
+    kapt 'com.google.dagger:dagger-compiler:2.24'
+    implementation 'com.google.dagger:dagger:2.24'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
 

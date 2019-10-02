@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.moviedetail
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
 import javax.inject.Inject
 
-class MovieActorAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : RecyclerView.Adapter<MovieActorAdapter.ActorViewHolder>() {
+class MovieActorAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : androidx.recyclerview.widget.RecyclerView.Adapter<MovieActorAdapter.ActorViewHolder>() {
     private lateinit var cast: List<Cast>
     private lateinit var clickListener: (actorId: Long) -> Unit
 
@@ -42,7 +42,7 @@ class MovieActorAdapter @Inject constructor(private val imageDownloader: MovieIm
         this.clickListener = clickListener
     }
 
-    class ActorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ActorViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         internal val imageView: ImageView = itemView.findViewById(R.id.actor_item_image)
         internal val actorName: TextView = itemView.findViewById(R.id.actor_item_name)
     }

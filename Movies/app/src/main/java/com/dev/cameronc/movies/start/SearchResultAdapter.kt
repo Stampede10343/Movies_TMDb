@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.start
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
 import javax.inject.Inject
 
-class SearchResultAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
+class SearchResultAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : androidx.recyclerview.widget.RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
 
     lateinit var resultClickListener: (searchResult: SearchResult) -> Unit
 
@@ -43,7 +43,7 @@ class SearchResultAdapter @Inject constructor(private val imageDownloader: Movie
         diff.dispatchUpdatesTo(this)
     }
 
-    class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SearchResultViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val thumbnail: ImageView = itemView.findViewById(R.id.search_result_thumbnail)
         val text: TextView = itemView.findViewById(R.id.search_result_item_text)
     }

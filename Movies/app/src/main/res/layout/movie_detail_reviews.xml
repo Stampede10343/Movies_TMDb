@@ -14,11 +14,11 @@
         android:layout_marginBottom="8dp"
         android:text="@string/reviews" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movie_detail_reviews"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:listitem="@layout/movie_review" />
 </LinearLayout>

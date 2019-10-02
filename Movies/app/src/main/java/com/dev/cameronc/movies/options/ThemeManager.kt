@@ -1,7 +1,7 @@
 package com.dev.cameronc.movies.options
 
 import android.content.SharedPreferences
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.dev.cameronc.movies.R
 import javax.inject.Inject
 

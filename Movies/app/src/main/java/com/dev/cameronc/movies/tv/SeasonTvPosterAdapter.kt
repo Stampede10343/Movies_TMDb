@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.tv
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.dev.cameronc.movies.MovieImageDownloader
 import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.model.tv.TvSeriesSeason
 
-class SeasonTvPosterAdapter(private val seasons: List<TvSeriesSeason>, private val imageDownloader: MovieImageDownloader) : RecyclerView.Adapter<SeasonTvPosterAdapter.ViewHolder>() {
+class SeasonTvPosterAdapter(private val seasons: List<TvSeriesSeason>, private val imageDownloader: MovieImageDownloader) : androidx.recyclerview.widget.RecyclerView.Adapter<SeasonTvPosterAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -27,7 +27,7 @@ class SeasonTvPosterAdapter(private val seasons: List<TvSeriesSeason>, private v
 
     override fun getItemCount(): Int = seasons.size
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val posterView: ImageView = itemView.findViewById(R.id.series_item_poster)
         val text: TextView = itemView.findViewById(R.id.series_item_text)
     }

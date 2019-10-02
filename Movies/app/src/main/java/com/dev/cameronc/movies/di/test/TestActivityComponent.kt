@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.di.test
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.dev.cameronc.movies.di.ActivityScope
 import com.dev.cameronc.movies.di.prod.ActivityComponent
 import com.dev.cameronc.movies.di.prod.ActivityModule

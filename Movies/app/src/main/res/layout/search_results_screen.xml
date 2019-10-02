@@ -5,25 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="?attr/contentStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/search_results_toolbar"
             style="@style/Toolbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.v7.widget.SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_results_searchview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_results_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -35,5 +35,5 @@
             app:layout_constraintTop_toBottomOf="@+id/search_results_toolbar"
             tools:listitem="@layout/multi_search_item"
             tools:visibility="visible" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.dev.cameronc.movies.search.SearchResultsScreen>

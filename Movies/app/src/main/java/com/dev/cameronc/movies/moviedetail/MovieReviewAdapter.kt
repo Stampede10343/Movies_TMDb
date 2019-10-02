@@ -1,7 +1,7 @@
 package com.dev.cameronc.movies.moviedetail
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.model.movie.MovieReview
 import javax.inject.Inject
 
-class MovieReviewAdapter @Inject constructor() : RecyclerView.Adapter<MovieReviewAdapter.ReviewViewHolder>() {
+class MovieReviewAdapter @Inject constructor() : androidx.recyclerview.widget.RecyclerView.Adapter<MovieReviewAdapter.ReviewViewHolder>() {
     private val reviews: MutableList<MovieReview> = emptyList<MovieReview>().toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
@@ -39,7 +39,7 @@ class MovieReviewAdapter @Inject constructor() : RecyclerView.Adapter<MovieRevie
         callback.dispatchUpdatesTo(this)
     }
 
-    class ReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ReviewViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         internal val author: TextView = itemView.findViewById(R.id.review_author)
         internal val review: TextView = itemView.findViewById(R.id.review_content)
     }

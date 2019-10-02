@@ -1,7 +1,7 @@
 package com.dev.cameronc.movies.start
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,7 @@ import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.model.movie.UpcomingMovie
 
 class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, private val results: MutableList<UpcomingMovie>,
-                       private val movieAdapterListener: MovieAdapterListener) : RecyclerView.Adapter<MovieCardAdapter.MovieVH>() {
+                       private val movieAdapterListener: MovieAdapterListener) : androidx.recyclerview.widget.RecyclerView.Adapter<MovieCardAdapter.MovieVH>() {
 
     private var isLoadingMore = false
 
@@ -33,11 +33,11 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
 
     override fun getItemCount(): Int = results.size
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+    override fun onAttachedToRecyclerView(recyclerView: androidx.recyclerview.widget.RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
-                val gridLayoutManager = rv.layoutManager as LinearLayoutManager
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                val gridLayoutManager = rv.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
                 val lastVisible = gridLayoutManager.findLastVisibleItemPosition()
                 if (results.size - 6 < lastVisible && !isLoadingMore) {
                     isLoadingMore = true
@@ -58,7 +58,7 @@ class MovieCardAdapter(private val imageDownloader: MovieImageDownloader, privat
         isLoadingMore = false
     }
 
-    class MovieVH(view: View, private val imageDownloader: MovieImageDownloader, private val listener: MovieAdapterListener) : RecyclerView.ViewHolder(view) {
+    class MovieVH(view: View, private val imageDownloader: MovieImageDownloader, private val listener: MovieAdapterListener) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         private val moviePoster: ImageView = view.findViewById(R.id.movie_card_poster)
 
         fun bind(movie: UpcomingMovie) {

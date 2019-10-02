@@ -1,6 +1,6 @@
 package com.dev.cameronc.androidutilities
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 
 class RecyclerViewDiffCalculator<T : Identifiable> : DiffUtil.Callback() {
     private lateinit var oldList: List<T>

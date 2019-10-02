@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.di.prod
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.dev.cameronc.androidutilities.AppNavigator
 import com.dev.cameronc.androidutilities.KeyboardHelper
 import com.dev.cameronc.androidutilities.SnackBarHelper

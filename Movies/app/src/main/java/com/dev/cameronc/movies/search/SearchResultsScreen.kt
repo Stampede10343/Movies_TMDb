@@ -2,11 +2,11 @@ package com.dev.cameronc.movies.search
 
 import android.content.Context
 import android.os.Parcelable
-import android.support.transition.TransitionManager
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
+import androidx.transition.TransitionManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.SearchView
 import android.util.AttributeSet
 import com.dev.cameronc.androidutilities.BaseKey
 import com.dev.cameronc.androidutilities.KeyboardHelper
@@ -46,13 +46,13 @@ class SearchResultsScreen : AppScreen, SearchView.OnQueryTextListener {
         val key = Backstack.getKey<Key>(context)
         search_results_searchview.setQuery(key.query, true)
 
-        search_results_list.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false)
-        val dividerItemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        search_results_list.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 1, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false)
+        val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL)
         dividerItemDecoration.setDrawable(context.getDrawable(R.drawable.item_divider)!!)
         search_results_list.addItemDecoration(dividerItemDecoration)
         search_results_list.adapter = adapter
-        search_results_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        search_results_list.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 if (dy > 20) keyboardHelper.dismissKeyboard()
             }
         })

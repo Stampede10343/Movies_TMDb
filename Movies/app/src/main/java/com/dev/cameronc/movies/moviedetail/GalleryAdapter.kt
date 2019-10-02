@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.moviedetail
 
-import android.support.v4.view.PagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.request.RequestOptions
@@ -9,7 +9,7 @@ import com.dev.cameronc.movies.R
 import com.github.chrisbanes.photoview.PhotoView
 import javax.inject.Inject
 
-class GalleryAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : PagerAdapter() {
+class GalleryAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : androidx.viewpager.widget.PagerAdapter() {
     val imageUrls: MutableList<String> = emptyList<String>().toMutableList()
     var imageClickListener: (() -> Unit)? = null
 

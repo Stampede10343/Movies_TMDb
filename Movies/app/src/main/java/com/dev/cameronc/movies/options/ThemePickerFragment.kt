@@ -2,7 +2,7 @@ package com.dev.cameronc.movies.options
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import com.dev.cameronc.movies.R
 import kotlinx.android.synthetic.main.theme_picker_dialog.*
 import javax.inject.Inject
 
-class ThemePickerFragment : DialogFragment() {
+class ThemePickerFragment : androidx.fragment.app.DialogFragment() {
 
     @Inject
     lateinit var preferences: SharedPreferences

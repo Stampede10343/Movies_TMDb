@@ -1,7 +1,7 @@
 package com.dev.cameronc.movies.moviedetail.groupie
 
 import android.graphics.Rect
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.View
 import com.dev.cameronc.androidutilities.view.MarginItemDecoration
 import com.dev.cameronc.movies.R
@@ -24,7 +24,7 @@ class MovieDetailInfo(val movieTitle: String, val rating: String, val runtime: S
         viewHolder.root.movie_detail_runtime.text = runtime
         viewHolder.root.movie_detail_rating_average.text = voteAverage
         viewHolder.root.movie_detail_genre_list.visibility = View.VISIBLE
-        viewHolder.root.movie_detail_genre_list.layoutManager = GridLayoutManager(viewHolder.root.context, 1, GridLayoutManager.HORIZONTAL, false)
+        viewHolder.root.movie_detail_genre_list.layoutManager = androidx.recyclerview.widget.GridLayoutManager(viewHolder.root.context, 1, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
         val margin = 8.toDp()
         viewHolder.root.movie_detail_genre_list.addItemDecoration(MarginItemDecoration(Rect(margin, 0, margin, 0)))
         viewHolder.root.movie_detail_genre_list.adapter = MovieGenreAdapter(genres)

@@ -2,11 +2,11 @@ package com.dev.cameronc.movies.start
 
 import android.content.Context
 import android.os.Parcelable
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.SearchView
 import android.util.AttributeSet
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -48,7 +48,7 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
     lateinit var keyboardHelper: KeyboardHelper
 
     private lateinit var moviesAdapter: MovieCardAdapter
-    private val searchResultsRecyclerView: RecyclerView = RecyclerView(context).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.dark_grey)) }
+    private val searchResultsRecyclerView: androidx.recyclerview.widget.RecyclerView = androidx.recyclerview.widget.RecyclerView(context).apply { setBackgroundColor(ContextCompat.getColor(context, R.color.dark_grey)) }
     private lateinit var searchResultsWindow: PopupWindow
 
     constructor(context: Context) : super(context)
@@ -73,7 +73,7 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
 
         movie_search_view.setOnQueryTextListener(this)
         searchResultsRecyclerView.adapter = searchResultsAdapter
-        searchResultsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        searchResultsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         setupSearchResultClickListener()
 
         viewModel.searchResults()
@@ -85,7 +85,7 @@ class StartScreen : AppScreen, MovieCardAdapter.MovieAdapterListener, Bundleable
                 .disposeBy(this)
 
         moviesAdapter = MovieCardAdapter(imageDownloader, emptyList<UpcomingMovie>().toMutableList(), this)
-        start_movies.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.grid_columns))
+        start_movies.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, resources.getInteger(R.integer.grid_columns))
         start_movies.adapter = moviesAdapter
 
         viewModel.getUpcomingMovies()

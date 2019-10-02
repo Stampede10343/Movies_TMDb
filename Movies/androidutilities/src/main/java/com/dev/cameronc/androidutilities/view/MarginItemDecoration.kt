@@ -1,15 +1,15 @@
 package com.dev.cameronc.androidutilities.view
 
 import android.graphics.Rect
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
-class MarginItemDecoration(private val margin: Rect) : RecyclerView.ItemDecoration() {
+class MarginItemDecoration(private val margin: Rect) : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
-        val adapter = parent.layoutManager as LinearLayoutManager
+        val adapter = parent.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
         val position = adapter.getPosition(view)
         outRect.bottom = margin.bottom
         outRect.top = margin.top

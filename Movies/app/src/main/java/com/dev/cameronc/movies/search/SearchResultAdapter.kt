@@ -1,7 +1,7 @@
 package com.dev.cameronc.movies.search
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,7 @@ import com.dev.cameronc.movies.R
 import com.dev.cameronc.movies.model.MultiSearchResult
 import javax.inject.Inject
 
-internal class SearchResultAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : RecyclerView.Adapter<SearchResultAdapter.MultiSearchViewHolder>() {
+internal class SearchResultAdapter @Inject constructor(private val imageDownloader: MovieImageDownloader) : androidx.recyclerview.widget.RecyclerView.Adapter<SearchResultAdapter.MultiSearchViewHolder>() {
     private val searchResults: MutableList<MultiSearchResult> = emptyList<MultiSearchResult>().toMutableList()
     lateinit var movieClickListener: (id: Long) -> Unit
     lateinit var tvClickListener: (id: Long) -> Unit
@@ -59,7 +59,7 @@ internal class SearchResultAdapter @Inject constructor(private val imageDownload
         diff.dispatchUpdatesTo(this)
     }
 
-    internal sealed class MultiSearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    internal sealed class MultiSearchViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         internal val image: ImageView = itemView.findViewById(R.id.multi_result_item_image)
         internal val title: TextView = itemView.findViewById(R.id.multi_result_item_title)
 

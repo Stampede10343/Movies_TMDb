@@ -3,7 +3,7 @@ package com.dev.cameronc.movies.actor
 import android.content.Context
 import android.graphics.Rect
 import android.os.Parcelable
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.util.AttributeSet
 import android.view.View
 import com.bumptech.glide.request.RequestOptions
@@ -102,7 +102,7 @@ class ActorScreen : AppScreen, Bundleable {
     private fun setupMovieRolesList(actorDetails: ActorScreenModel) {
         val margin = 8.toDp()
         actor_movie_credits.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
-        actor_movie_credits.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
+        actor_movie_credits.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 1, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
         actorRoleAdapter.items = actorDetails.actorRoles
         actorRoleAdapter.movieRoleClickListener = {
             Navigator.getBackstack(context).goTo(MovieDetailScreen.MovieDetailKey(it))
@@ -113,7 +113,7 @@ class ActorScreen : AppScreen, Bundleable {
     private fun setupTvRolesList(actorDetails: ActorScreenModel) {
         val margin = 8.toDp()
         actor_tv_credits.addItemDecoration(MarginItemDecoration(Rect(margin, margin, margin, margin)))
-        actor_tv_credits.layoutManager = GridLayoutManager(context, 1, GridLayoutManager.HORIZONTAL, false)
+        actor_tv_credits.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 1, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
         actorTvRoleAdapter.items = actorDetails.tvRoles
         actor_tv_credits.adapter = actorTvRoleAdapter
         actorTvRoleAdapter.tvRoleClickListener = {

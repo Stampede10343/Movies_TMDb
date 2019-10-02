@@ -2,11 +2,11 @@ package com.dev.cameronc.movies.moviedetail
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import com.dev.cameronc.androidutilities.view.fadeAndSetGone
 import com.dev.cameronc.androidutilities.view.fadeIn
 
-class MovieImageViewerController(private val viewPager: ViewPager) {
+class MovieImageViewerController(private val viewPager: androidx.viewpager.widget.ViewPager) {
     var viewState: Parcelable? = null
 
     fun show(imageUrls: List<String>, galleryAdapter: GalleryAdapter) {

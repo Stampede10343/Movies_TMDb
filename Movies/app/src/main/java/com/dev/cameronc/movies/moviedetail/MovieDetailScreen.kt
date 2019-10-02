@@ -3,7 +3,7 @@ package com.dev.cameronc.movies.moviedetail
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.View
 import com.dev.cameronc.androidutilities.ScreenState
@@ -80,7 +80,7 @@ class MovieDetailScreen : AppScreen, Bundleable {
                                 add(RelatedMoviesItem(data.similarMovies, imageDownloader))
 
                                 movie_detail_recyclerview.adapter = this
-                                movie_detail_recyclerview.layoutManager = LinearLayoutManager(context)
+                                movie_detail_recyclerview.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
                             }
                         }
                         is ScreenState.Loading<MovieDetails> -> {

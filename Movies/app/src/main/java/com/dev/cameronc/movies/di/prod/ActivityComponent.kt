@@ -1,6 +1,6 @@
 package com.dev.cameronc.movies.di.prod
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.dev.cameronc.movies.MainActivity
 import com.dev.cameronc.movies.actor.ActorScreen
 import com.dev.cameronc.movies.di.ActivityScope
